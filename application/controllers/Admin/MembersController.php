@@ -33,36 +33,28 @@ class Admin_MembersController extends Zend_Controller_Action
 	
 	public function addAction() {
 		
-		$request = $this->getRequest(); //nalaze se podaci iz url iz forme koje prosledjujemo 
-                //cuva dolazne podatke input data
-                //getpost je getter za post podatke
-		
+		$request = $this->getRequest();
+                
 		$flashMessenger = $this->getHelper('FlashMessenger');
-                //prenosi sistemske poruke sa prethodnih stranica
 		
 		$systemMessages = array(
 			'success' => $flashMessenger->getMessages('success'),
 			'errors' => $flashMessenger->getMessages('errors'),
 		);
 		
-		
 		$form = new Application_Form_Admin_MemberAdd();
                
-
 		//default form data
 		$form->populate(array(
 			
 		));
 
-		if ($request->isPost() && $request->getPost('task') === 'save') { //ukoliko je pokrenuta forma
-                    //da li je pokrenut post zahtev i dali je to hiden polje save  tj forma pokrenuta
-
+		if ($request->isPost() && $request->getPost('task') === 'save') { 
+                    
 			try {
 
 				//check form is valid
-				if (!$form->isValid($request->getPost())) {  //da li su podaci sa forme validni asocijativni niz ciji su kljucevi name atriuti polja u formi 
-                                    //a vrednisti su ono sto smo uneli u formi
-                                    //ukooliko nisu podaci validni bacamo execption y slucaju da nisu dobri podaci
+				if (!$form->isValid($request->getPost())) { 
 					throw new Application_Model_Exception_InvalidInput('Invalid data was sent for new member');
 				}
                                 //ukoliko je validna forma
