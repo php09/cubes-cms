@@ -93,6 +93,79 @@ class Admin_MembersController extends Zend_Controller_Action
         
         public function editAction() {
             
+            $request = $this->getRequest();
+            
+            $id = (int) $request->getParam("id");
+            
+            if($id <= 0) {
+                //prekida se izvrsavanje i prikazuje se page not found
+                throw new Zend_Controller_Router_Exception('Invalid member id: ' . $id , 404);
+            }
+            
+            $cmsMembersTable = new Application_Model_DbTable_CmsMembers;
+            
+            $member = $cmsMembersTable->getMemberById($id);
+            
+            if( empty($member) ) {
+                throw new Zend_Controller_Router_Exception('No member is found with id: ' . $id , 404);
+            }
+            
+            $this->view->member = $member;
+            
+            
+            
+            $flashMessenger = $this->getHelper('FlashMessenger');
+		
+		$systemMessages = array(
+			'success' => $flashMessenger->getMessages('success'),
+			'errors' => $flashMessenger->getMessages('errors'),
+		);
+		
+		$form = new Application_Form_Admin_MemberAdd();
+               
+		//default form data
+		$form->populate( $member );
+
+		if ($request->isPost() && $request->getPost('task') === 'update') { 
+                    
+			try {
+
+				//check form is valid
+				if (!$form->isValid($request->getPost())) { 
+					throw new Application_Model_Exception_InvalidInput('Invalid data was sent for member');
+				}
+                                //ukoliko je validna forma
+				//get form data
+				$formData = $form->getValues(); //filtrirani i validirani podaci
+                                
+                                
+                                //radimo update postojeceg zapisa u tabeli
+                                $cmsMembersTable->update($formData, "id = " . $member['id']);
+                                
+
+				// do actual task
+				//save to database etc
+				
+				
+				//set system message
+				$flashMessenger->addMessage('Member has been updated', 'success');
+
+				//redirect to same or another page po nasoj ideji bacamo na stranicu gde su svi memberi
+				$redirector = $this->getHelper('Redirector');
+				$redirector->setExit(true)
+					->gotoRoute(array(
+						'controller' => 'admin_members',
+						'action' => 'index'
+                                                            ), 'default', true);
+			} catch (Application_Model_Exception_InvalidInput $ex) {
+				$systemMessages['errors'][] = $ex->getMessage();
+			}
+		}
+
+		$this->view->systemMessages = $systemMessages;
+		$this->view->form = $form;
+            
+            
         }
         
 }
