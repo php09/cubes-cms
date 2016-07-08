@@ -9,7 +9,7 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
 
     /**
      * @param int $id
-     * @return null/array Associative arrao with keys as cms_members table columns or returns null
+     * @return null/array Associative array with keys as cms_members table columns or returns null
      */
     public function getMemberById($id) {
 
@@ -23,6 +23,37 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
         } else {
             return null;
         }
+    }
+    
+        /**
+     * 
+     * @param int $id
+     * @param array $user Associative array with keys as column names and values as column new values
+     */
+    public function updateMember($id, $member) {
+        
+        if( isset($member['id']) ) {
+            unset($member['id']);
+        }
+        
+        $this->update($member, 'id = ' . $id);
+        
+    }
+    
+    /**
+     * 
+     * @param Array $member Associative array with keys as column names and values as column new values
+     * @return int The id of new member (auto increment)
+     */
+    public function insertMember($member) {
+        
+        
+        
+        
+        //insert vraca id od insertovanog membera
+        $id = $this->insert($member);
+        
+        return $id;
     }
 
 }
