@@ -1,151 +1,16 @@
-<div class="page-header">
-  <h1>JavaScript 1</h1>
-</div>
-<div class="row">
-	<div class="c ol-lg-12">
-		<button class="btn btn-default">Ulepsaj tabelu</button>
-		<button class="btn btn-default">Dodaj red</button>
-		<a href="http://www.facebook.com" class="btn btn-default">Otvori facebook</a>
-	</div>
-</div>
-<div class="row">
-	<div class="col-lg-12">
-		<table>
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Ime</th>
-					<th>Prezime</th>
-					<th>#</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>php01</td>
-					<td>Aleksandar</td>
-					<td>Stevanovic</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-sm"><i class="fa fa-eye"></i></button>
-							<button class="btn btn-sm"><i class="fa fa-trash"></i></button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>php02</td>
-					<td>Natasa</td>
-					<td>Lukic</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-sm"><i class="fa fa-eye"></i></button>
-							<button class="btn btn-sm"><i class="fa fa-trash"></i></button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>php03</td>
-					<td>Aleksandra</td>
-					<td>Petkovic</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-sm"><i class="fa fa-eye"></i></button>
-							<button class="btn btn-sm"><i class="fa fa-trash"></i></button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>php04</td>
-					<td>Djordje</td>
-					<td>Stojiljkovic</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-sm"><i class="fa fa-eye"></i></button>
-							<button class="btn btn-sm"><i class="fa fa-trash"></i></button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>php05</td>
-					<td>Milos</td>
-					<td>Stefanovic</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-sm"><i class="fa fa-eye"></i></button>
-							<button class="btn btn-sm"><i class="fa fa-trash"></i></button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>php06</td>
-					<td>Milomir</td>
-					<td>Dragovic</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-sm"><i class="fa fa-eye"></i></button>
-							<button class="btn btn-sm"><i class="fa fa-trash"></i></button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>php07</td>
-					<td>Miroslav</td>
-					<td>Mutic</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-sm"><i class="fa fa-eye"></i></button>
-							<button class="btn btn-sm"><i class="fa fa-trash"></i></button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>php08</td>
-					<td>Bojan</td>
-					<td>Joncic</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-sm"><i class="fa fa-eye"></i></button>
-							<button class="btn btn-sm"><i class="fa fa-trash"></i></button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>php09</td>
-					<td>Arben</td>
-					<td>Bakiu</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-sm"><i class="fa fa-eye"></i></button>
-							<button class="btn btn-sm"><i class="fa fa-trash"></i></button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>php10</td>
-					<td>Zeljka</td>
-					<td>Babic</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-sm"><i class="fa fa-eye"></i></button>
-							<button class="btn btn-sm"><i class="fa fa-trash"></i></button>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
 <script>
+    <?php $this->inlineScript()->captureStart() ;?>
     var ime = 'hello world';
     var starost = 30;
     
     var polaznici = ['ime1', 'ime2', 'ime3'];
     
-    for(var index in polaznici) {
+//    for(var index in polaznici) {
         
 //        alert( ( parseInt(index) + 1 ) + " " + polaznici[index]);
 //        console.log( ( parseInt(index) + 1 ) + " " + polaznici[index]);
         
-    }
+//    }
     
 //    alert(polaznici[0]);
     
@@ -186,7 +51,70 @@
 
 //    console.log(cubes);
 
-for(var key in polaznik)
-    console.log(key + ' -> ' + polaznik[key])
+//for(var key in polaznik)
+//    console.log(key + ' -> ' + polaznik[key])
+
+var doubleTestNumber = 77;
+
+function testF(testNumber) {
+    var doubleTestNumber = testNumber * 2;
+    
+//  console.log('Calling function testF ' + doubleTestNumber + '!' );  
+};
+
+testF(2);
+testF(4);
+testF(5);
+testF(1);
+testF(2);
+
+//console.log('doubleTestNumber is: ' + doubleTestNumber);
+
+var testF2 = function() {
+    console.log("Calling function");
+};
+
+testF2();
+
+//Object constructor
+function Polaznik(ime, prezime, starost) {
+    
+    this.ime = ime;
+    this.prezime = prezime;
+    this.starost = starost;
+    
+    this.predstaviSe = function() {
+        return 'Ja sam ' + this.ime + ' ' + this.prezime + ' i imam ' + this.starost + ' godina.';
+    }
+    
+}
+
+var p1 = new Polaznik('ime1', 'prezime1', 63);
+var p2 = new Polaznik('ime2', 'prezime2', 42);
+var p3 = new Polaznik('ime3', 'prezime3', 22);
+var p4 = new Polaznik('ime4', 'prezime4', 55);
+
+console.log(p1.predstaviSe());
+console.log(p2.predstaviSe());
+console.log(p3.predstaviSe());
+console.log(p4.predstaviSe());
+
+p4.getIme = function() {
+    return this.ime;
+}
+
+
+window;
+window.screen;
+screen;
+
+window.location;
+location;
+
+//setTimeout( function() {
+//    location.href = "http://www.google.com";
+//} , 5000); 
+
+<?php $this->inlineScript()->captureEnd() ;?>
 
 </script>
