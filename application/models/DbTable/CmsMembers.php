@@ -55,5 +55,29 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
         
         return $id;
     }
+    
+    /**
+     * 
+     * @param int $id Id of the member to delete
+     */
+    public function deleteMember($id) {
+        $this->delete('id = ' . $id);        
+    }
+    
+    /**
+     * 
+     * @param int $id Id of the member to enagle
+     */
+    public function enableMember($id) {
+        $this->update(array('status' => self::STATUS_ENABLED), 'id = ' . $id);
+    }
+    
+    /**
+     * 
+     * @param int $id Id of the member to disable
+     */
+    public function disableMember($id) {
+        $this->update(array('status' => self::STATUS_DISABLED), 'id = ' . $id);
+    }
 
 }
