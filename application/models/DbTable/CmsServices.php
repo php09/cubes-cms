@@ -52,4 +52,28 @@ class Application_Model_DbTable_CmsServices extends Zend_Db_Table_Abstract
         return $id;
     }
 
+    /**
+     * 
+     * @param int $id Id of the service to delete
+     */
+    public function deleteService($id) {
+        $this->delete('id = ' . $id);        
+    }
+    
+    /**
+     * 
+     * @param int $id Id of the service to enagle
+     */
+    public function enableService($id) {
+        $this->update(array('status' => self::STATUS_ENABLED), 'id = ' . $id);
+    }
+    
+    /**
+     * 
+     * @param int $id Id of the service to disable
+     */
+    public function disableService($id) {
+        $this->update(array('status' => self::STATUS_DISABLED), 'id = ' . $id);
+    }
+    
 }

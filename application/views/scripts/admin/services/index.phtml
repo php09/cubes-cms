@@ -24,7 +24,7 @@ $this->headTitle('Services');
 			</div>
 			<div class="panel-body">
 				
-				<table class="table table-striped table-hover">
+				<table id="table-rows" class="table table-striped table-hover">
 					<thead>
 						<tr>
 							<th class="text-center">Icon</th>
@@ -46,17 +46,13 @@ $this->headTitle('Services');
 							<td><?php echo $this->escape($service['description']);?></td>
 							<td class="text-center">
 								<div class="btn-group btn-group-sm" role="group" aria-label="...">
-<!--                                                                        <a 
-                                                                            target="_blank"
-                                                                            href="<?php echo $this->url( array('controller' => 'aboutus', 'action' => 'member', 'id' => $member['id']), 'default', true ) ;?>"
-                                                                            type="button" class="btn btn-default" title="preview"><i class="glyphicon glyphicon-eye-open"></i>
-                                                                        </a>-->
 									<a 
                                                                             href="<?php echo $this->url( array('controller' => 'admin_services', 'action' => 'edit', 'id' => $service['id']), 'default', true ) ;?>"
                                                                             type="button" class="btn btn-default" title="edit">
                                                                             <i class="glyphicon glyphicon-pencil"></i>
                                                                         </a>
-									<button type="button" class="btn btn-default" title="enable"><i class="glyphicon glyphicon-ok"></i></button>
+									<button data-serviceInfo="<?php echo $service['title'] ;?>" data-serviceId="<?php echo $this->escape($service['id']);?>" data-action="enable" type="button" class="btn btn-default" title="enable"><i class="glyphicon glyphicon-ok"></i></button>
+                                                                        <button data-serviceInfo="<?php echo $service['title'] ;?>" data-serviceId="<?php echo $this->escape($service['id']);?>" data-action="delete" type="button" class="btn btn-default" title="delete"><i class="glyphicon glyphicon-trash"></i></button>
 								</div>
 							</td>
 						</tr>
@@ -72,7 +68,7 @@ $this->headTitle('Services');
 								<div class="btn-group btn-group-sm" role="group" aria-label="...">
 <!--                                                                        <a 
                                                                             target="_blank"
-                                                                            href="<?php echo $this->url( array('controller' => 'aboutus', 'action' => 'member', 'id' => $member['id']), 'default', true ) ;?>"
+                                                                            href="<?php echo $this->url( array('controller' => 'aboutus', 'action' => 'service', 'id' => $service['id']), 'default', true ) ;?>"
                                                                             type="button" class="btn btn-default" title="preview"><i class="glyphicon glyphicon-eye-open"></i>
                                                                         </a>-->
 									<a 
@@ -80,7 +76,8 @@ $this->headTitle('Services');
                                                                             type="button" class="btn btn-default" title="edit">
                                                                             <i class="glyphicon glyphicon-pencil"></i>
                                                                         </a>
-									<button type="button" class="btn btn-default" title="disable"><i class="glyphicon glyphicon-remove"></i></button>
+                                                                        <button data-serviceInfo="<?php echo $service['title'] ;?>" data-serviceId="<?php echo $this->escape($service['id']);?>" data-action="disable" type="button" class="btn btn-default" title="enable"><i class="glyphicon glyphicon-remove"></i></i></button>
+                                                                        <button data-serviceInfo="<?php echo $service['title'] ;?>" data-serviceId="<?php echo $this->escape($service['id']);?>" data-action="delete" type="button" class="btn btn-default" title="delete"><i class="glyphicon glyphicon-trash"></i></button>
 								</div>
 							</td>
 						</tr>
@@ -101,3 +98,117 @@ $this->headTitle('Services');
 		</div>
 	</div>
 </div>
+
+
+<form id="delete-warning-dialog" class="modal fade" tabindex="-1" role="dialog" method="post" action="<?php echo $this->url( array('controller' => 'admin_services', 'action' => 'delete'), 'default', true) ;?>">
+    <input type="hidden" name="task" value="delete">
+    <input type="hidden" name="id" value="">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Delete service</h4>
+      </div>
+      <div class="modal-body">
+          <p>Are you sure you want to delete service <span id="delete-service"></span>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</form><!-- /.modal -->
+
+
+<form id="disable-warning-dialog" class="modal fade" tabindex="-1" role="dialog" method="post" action="<?php echo $this->url( array('controller' => 'admin_services', 'action' => 'disable'), 'default', true) ;?>">
+    <input type="hidden" name="task" value="disable">
+    <input type="hidden" name="id" value="">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Disable service</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to disable service <span id="disable-service"></span>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-danger">Disable</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</form><!-- /.modal -->
+
+
+<form id="enable-warning-dialog" class="modal fade" tabindex="-1" role="dialog" method="post" action="<?php echo $this->url( array('controller' => 'admin_services', 'action' => 'enable'), 'default', true) ;?>">
+    <input type="hidden" name="task" value="enable">
+    <input type="hidden" name="id" value="">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Enable service</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to enable <span id="enable-service"></span>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-success">Enable</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</form><!-- /.modal -->
+
+
+<script>
+<?php $this->inlineScript()->captureStart() ;?>    
+    
+    $('#table-rows').on('click', "[data-action='delete']", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var target = $(this).is("[data-action='delete']") ? $(this) : $(this).closest("[data-action='delete']");
+        
+        
+        var serviceId = target.attr('data-serviceId');
+        var serviceInfo = target.attr('data-serviceInfo');
+        $('#delete-warning-dialog [name = "id"] ').val(serviceId) //alternativni nacin
+        $('#delete-service').text(serviceInfo);
+        $('#delete-warning-dialog').modal('show');
+        
+    });
+    
+    $('#table-rows').on('click', "[data-action='disable']", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var target = $(this).is("[data-action='disable']") ? $(this) : $(this).closest("[data-action='disable']");
+        var serviceId = target.attr('data-serviceId');
+        var serviceInfo = target.attr('data-serviceInfo');
+        $('#disable-warning-dialog [name = "id"] ').val(serviceId) //alternativni nacin
+        $('#disable-service').text(serviceInfo);
+        $('#disable-warning-dialog').modal('show');
+        
+    });
+    
+    
+        $('#table-rows').on('click', "[data-action='enable']", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var target = $(this).is("[data-action='enable']") ? $(this) : $(this).closest("[data-action='enable']");
+        var serviceId = target.attr('data-serviceId');
+        var serviceInfo = target.attr('data-serviceInfo');
+        $('#enable-warning-dialog [name = "id"] ').val(serviceId) //alternativni nacin
+        $('#enable-service').text(serviceInfo);
+        $('#enable-warning-dialog').modal('show');
+        
+    });
+    
+    
+    
+<?php $this->inlineScript()->captureEnd() ;?>
+</script>

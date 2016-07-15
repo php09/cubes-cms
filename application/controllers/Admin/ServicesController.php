@@ -91,4 +91,204 @@ class Admin_ServicesController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
+    
+      public function deleteAction() {
+            
+            $request = $this->getRequest();
+            
+            if(!$request->isPost() || $request->getPost('task') != 'delete' ) {
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true);
+            }
+            
+            $flashMessenger = $this->getHelper('FlashMessenger');
+            
+            
+            try {
+                
+                
+            $id = (int) $request->getPost("id");
+            
+            if($id <= 0) {
+                
+                throw new Application_Model_Exception_InvalidInput("Invalid service id: " . $id );
+                
+            }
+            
+            $cmsServicesTable = new Application_Model_DbTable_CmsServices;
+            
+            $service = $cmsServicesTable->getServiceById($id);
+            
+            if( empty($service) ) {
+                
+                throw new Application_Model_Exception_InvalidInput("No service is found with id: " . $id );
+
+            }
+            
+                $cmsServicesTable->deleteService($id);
+                $flashMessenger->addMessage("Service " . $service["title"] . " has been deleted." , "success");
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true);
+
+            } catch (Application_Model_Exception_InvalidInput $ex) {
+
+                $flashMessenger->addMessage($ex->getMessage());
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true);
+                
+            }
+            
+		
+            
+        }
+ 
+        
+            public function disableAction() {
+            
+            $request = $this->getRequest();
+            
+            if(!$request->isPost() || $request->getPost('task') != 'disable' ) {
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true);
+            }
+            
+            $flashMessenger = $this->getHelper('FlashMessenger');
+            
+            
+            try {
+                
+                
+            $id = (int) $request->getPost("id");
+            
+            if($id <= 0) {
+                
+                throw new Application_Model_Exception_InvalidInput("Invalid service id: " . $id );
+                
+            }
+            
+            $cmsServicesTable = new Application_Model_DbTable_CmsServices;
+            
+            $service = $cmsServicesTable->getServiceById($id);
+            
+            if( empty($service) ) {
+                
+                throw new Application_Model_Exception_InvalidInput("No service is found with id: " . $id );
+
+            }
+            
+                $cmsServicesTable->disableService($id);
+                $flashMessenger->addMessage("Service " . $service["title"]  . " has been disabled." , "success");
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true);
+
+            } catch (Application_Model_Exception_InvalidInput $ex) {
+
+                $flashMessenger->addMessage($ex->getMessage());
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true);
+                
+            }
+            
+		
+            
+        }
+        
+                public function enableAction() {
+            
+            $request = $this->getRequest();
+            
+            if(!$request->isPost() || $request->getPost('task') != 'enable' ) {
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true);
+            }
+            
+            $flashMessenger = $this->getHelper('FlashMessenger');
+            
+            
+            try {
+                
+                
+            $id = (int) $request->getPost("id");
+            
+            if($id <= 0) {
+                
+                throw new Application_Model_Exception_InvalidInput("Invalid service id: " . $id );
+                
+            }
+            
+            $cmsServicesTable = new Application_Model_DbTable_CmsServices;
+            
+            $service = $cmsServicesTable->getServiceById($id);
+            
+            if( empty($service) ) {
+                
+                throw new Application_Model_Exception_InvalidInput("No service is found with id: " . $id );
+
+            }
+            
+                $cmsServicesTable->enableService($id);
+                $flashMessenger->addMessage("Service " . $service["title"] . " has been enabled." , "success");
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true);
+
+            } catch (Application_Model_Exception_InvalidInput $ex) {
+
+                $flashMessenger->addMessage($ex->getMessage());
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true);
+                
+            }
+            
+		
+            
+        }
+        
+        
+        
+    
 }
