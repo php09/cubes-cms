@@ -368,8 +368,65 @@ class Admin_MembersController extends Zend_Controller_Action
             
         }
         
-        
-        
-        
-        
+        public function updateorderAction() {
+            
+            $request = $this->getRequest();
+            
+            if(!$request->isPost() || $request->getPost('task') != 'saveorder' ) {
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_members',
+                                'action' => 'index'
+                                ), 'default', true);
+            }
+            
+            $flashMessenger = $this->getHelper('FlashMessenger');
+            
+            
+            try {
+                
+                $sortedIds = $request->getPost('sorted_ids');
+                
+                if(empty($sortedIds)) {
+                    throw new Application_Model_Exception_InvalidInput('Sorted ids are not sent.');
+                }
+                
+                $sortedIds = trim($sortedIds, " ,");
+                
+                if(!preg_match('/^[0-9]+(,[0-9]+)*$/', $sortedIds)) {
+                    throw new Application_Model_Exception_InvalidInput("Invalid sorted ids.", $sortedIds);
+                }
+                
+                $sortedIds = explode(',', $sortedIds);
+                
+                $cmsMembersTable = new Application_Model_DbTable_CmsMembers;
+                
+                $cmsMembersTable->updateOrderOfMember($sortedIds);
+                
+                $flashMessenger->addMessage("Order is successfully saved", 'success');
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_members',
+                                'action' => 'index'
+                                ), 'default', true); 
+                
+            } catch (Application_Model_Exception_InvalidInput $ex) {
+                
+                $flashMessenger->addMessage($ex->getMessage());
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_members',
+                                'action' => 'index'
+                                ), 'default', true); 
+                
+            }
+            
+            
+        }
 }

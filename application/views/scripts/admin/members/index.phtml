@@ -16,6 +16,8 @@ $this->headTitle('Members');
 		<div class="panel panel-default">
 			<div class="panel-heading text-right">
 				<div class="btn-group" role="group" aria-label="...">
+                                    <button data-action="save-order" class ="btn btn-success" style="display:none"><i class="glyphicon glyphicon-save"></i> Save order</button>
+                                    <button data-action="toggle-sort" class="btn btn-default"><i class="glyphicon glyphicon-list"></i> Change order</button>
 					<a 
 						href="<?php echo $this->url(array('controller' => 'admin_members', 'action' => 'add'), 'default', true);?>"
 						class="btn btn-default"
@@ -27,6 +29,7 @@ $this->headTitle('Members');
 				<table id="table-rows" class="table table-striped table-hover">
 					<thead>
 						<tr>
+                                                    <th></th>
 							<th class="text-center">Img</th>
 							<th class="text-center">Status</th>
 							<th>First Name</th>
@@ -41,7 +44,8 @@ $this->headTitle('Members');
 						foreach ($this->members as $member) {
 							if ($member['status'] == Application_Model_DbTable_CmsMembers::STATUS_DISABLED) {
 							?>
-						<tr class="danger">
+						<tr data-member-id="<?php echo $this->escape($member['id']);?>" class="danger">
+                                                    <td class="text-center"><i  data-action="sort"  style="display:none; cursor: pointer;" class="glyphicon glyphicon-list"></i></td>
 							<td class="text-center"><img style="max-height: 24px;" src="<?php echo $this->memberImgUrl($member);?>"></td>
 							<td class="text-center"><span class="badge alert-danger" title="disabled"><i class="glyphicon glyphicon-remove"></i></span></td>
 							<td><?php echo $this->escape($member['first_name']);?></td>
@@ -60,15 +64,16 @@ $this->headTitle('Members');
                                                                             type="button" class="btn btn-default" title="edit">
                                                                             <i class="glyphicon glyphicon-pencil"></i>
                                                                         </a>
-									<button data-memberInfo="<?php echo $member['first_name'] . " " . $member["last_name"] ;?>" data-memberId="<?php echo $this->escape($member['id']);?>" data-action="enable" type="button" class="btn btn-default" title="enable"><i class="glyphicon glyphicon-ok"></i></button>
-                                                                        <button data-memberInfo="<?php echo $member['first_name'] . " " . $member["last_name"] ;?>" data-memberId="<?php echo $this->escape($member['id']);?>" data-action="delete" type="button" class="btn btn-default" title="delete"><i class="glyphicon glyphicon-trash"></i></button>
+									<button data-memberInfo="<?php echo $member['first_name'] . " " . $member["last_name"] ;?>" data-member-id="<?php echo $this->escape($member['id']);?>" data-action="enable" type="button" class="btn btn-default" title="enable"><i class="glyphicon glyphicon-ok"></i></button>
+                                                                        <button data-memberInfo="<?php echo $member['first_name'] . " " . $member["last_name"] ;?>" data-member-id="<?php echo $this->escape($member['id']);?>" data-action="delete" type="button" class="btn btn-default" title="delete"><i class="glyphicon glyphicon-trash"></i></button>
 								</div>
 							</td>
 						</tr>
 							<?php
 							} else {
 							?>
-						<tr>
+						<tr data-member-id="<?php echo $this->escape($member['id']);?>">
+                                                    <td class="text-center"><i data-action="sort" style="display:none; cursor: pointer;" class="glyphicon glyphicon-list"></i></td>
 							<td class="text-center"><img style="max-height: 24px;" src="<?php echo $this->memberImgUrl($member);?>"></td>
 							<td class="text-center"><span class="badge alert-success" title="enabled"><i class="glyphicon glyphicon-ok"></i></span></td>
 							<td><?php echo $this->escape($member['first_name']);?></td>
@@ -86,8 +91,8 @@ $this->headTitle('Members');
 									<a 
                                                                             href="<?php echo $this->url( array('controller' => 'admin_members', 'action' => 'edit', 'id' => $member['id']), 'default', true ) ;?>"
                                                                             type="button" class="btn btn-default" title="edit"><i class="glyphicon glyphicon-pencil"></i></a>
-									<button data-memberInfo="<?php echo $member['first_name'] . " " . $member["last_name"] ;?>" data-memberId="<?php echo $this->escape($member['id']);?>" data-action="disable" type="button" class="btn btn-default" title="disable"><i class="glyphicon glyphicon-remove"></i></button>
-                                                                        <button data-memberInfo="<?php echo $member['first_name'] . " " . $member["last_name"] ;?>" data-memberId="<?php echo $this->escape($member['id']);?>" data-action="delete" type="button" class="btn btn-default" title="delete"><i class="glyphicon glyphicon-trash"></i></button>
+									<button data-memberInfo="<?php echo $member['first_name'] . " " . $member["last_name"] ;?>" data-member-id="<?php echo $this->escape($member['id']);?>" data-action="disable" type="button" class="btn btn-default" title="disable"><i class="glyphicon glyphicon-remove"></i></button>
+                                                                        <button data-memberInfo="<?php echo $member['first_name'] . " " . $member["last_name"] ;?>" data-member-id="<?php echo $this->escape($member['id']);?>" data-action="delete" type="button" class="btn btn-default" title="delete"><i class="glyphicon glyphicon-trash"></i></button>
 								</div>
 							</td>
 						</tr>
@@ -171,7 +176,16 @@ $this->headTitle('Members');
   </div><!-- /.modal-dialog -->
 </form><!-- /.modal -->
 
+<form method="post" action="<?php echo $this->url(array('controller' => 'admin_members', 'action' => 'updateorder' ), 'default', true) ;?>" style="display:none;" id="save-order-form">
+    <input type="hidden" name="task" value="saveorder">
+    <input type="hidden" name="sorted_ids" value="">
+</form>
 
+
+<?php
+$this->headLink()->appendStylesheet($this->baseUrl("/admin/bower_components/jquery-ui-1.12.0/jquery-ui.min.css"));
+$this->inlineScript()->appendFile($this->baseUrl("/admin/bower_components/jquery-ui-1.12.0/jquery-ui.min.js"));
+?>
 <script>
 <?php $this->inlineScript()->captureStart() ;?>    
     
@@ -182,7 +196,7 @@ $this->headTitle('Members');
         var target = $(this).is("[data-action='delete']") ? $(this) : $(this).closest("[data-action='delete']");
         
         
-        var memberId = target.attr('data-memberId');
+        var memberId = target.attr('data-member-id');
         var memberInfo = target.attr('data-memberInfo');
 //        var memberId = target.data("memberId");
 //        alert(memberId);
@@ -198,7 +212,7 @@ $this->headTitle('Members');
         e.stopPropagation();
         
         var target = $(this).is("[data-action='disable']") ? $(this) : $(this).closest("[data-action='disable']");
-        var memberId = target.attr('data-memberId');
+        var memberId = target.attr('data-member-id');
                 var memberInfo = target.attr('data-memberInfo');
 //        var memberId = target.data("memberId");
 //        alert(memberId);
@@ -215,18 +229,82 @@ $this->headTitle('Members');
         e.stopPropagation();
         
         var target = $(this).is("[data-action='enable']") ? $(this) : $(this).closest("[data-action='enable']");
-        var memberId = target.attr('data-memberId');
+        var memberId = target.attr('data-member-id');
         var memberInfo = target.attr('data-memberInfo');
-//        var memberId = target.data("memberId");
+        var memberId = target.data("memberId");
 //        alert(memberId);
-//        $('#delete-warning-dialog').find('[name = "id"]'). //alternativni nacini
-        $('#enable-warning-dialog [name = "id"] ').val(memberId) //alternativni nacin
+        $('#delete-warning-dialog').find('[name = "id"]'). //alternativni nacini
+//        $('#enable-warning-dialog [name = "id"] ').val(memberId) //alternativni nacin
         $('#enable-user').text(memberInfo);
         $('#enable-warning-dialog').modal('show');
         
     });
     
     
+    $("[data-action='toggle-sort']").on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation;
+        
+        var target = $(this).is("[data-action='toggle-sort']") ? $(this) : $(this).closest("[data-action='toggle-sort']");
+        
+        var sortableTbody = $("#table-rows > tbody");
+        
+        if (target.hasClass('active')) {
+                target.removeClass('active');
+                
+                target.html('<i class="glyphicon glyphicon-list"></i> Change order');
+                    
+                    sortableTbody.sortable('destroy');
+                    sortableTbody.html(sortableTbody.data('oldHtml'));
+                    
+                    sortableTbody.find('[data-action="sort"]').hide();
+                    
+                    $('[data-action="save-order"]').hide();
+                    
+        } else {
+            
+            sortableTbody
+            
+            target.addClass('active');
+           
+            //method html
+            target.html('<i class="glyphicon glyphicon-remove"></i> Cancel');
+           
+           sortableTbody.data("oldHtml", sortableTbody.html());
+           
+           
+            sortableTbody.sortable({
+                handle: '[data-action="sort"]'
+            });
+           
+            //show "'handle for sorting, the icon in first column
+            sortableTbody.find('[data-action="sort"]').show();
+
+            $('[data-action="save-order"]').show();
+        }
+
+    });
+    
+    
+//    $("#table-rows > tbody").sortable({
+//            handle: '[data-action= "sort"]'
+//    });
+    
+    $("[data-action='save-order']").on('click', function(e) {
+        e.preventDefault;
+        e.stopPropagation;
+        
+        var memberSortedIds = $('#table-rows > tbody').sortable('toArray', {
+            attribute: "data-member-id"
+        });
+        
+        var saveOrderForm = $('#save-order-form');
+        
+        saveOrderForm.find('[name="sorted_ids"]').val( memberSortedIds.join(","));
+        
+        saveOrderForm.trigger('submit')
+        
+    });
     
 <?php $this->inlineScript()->captureEnd() ;?>
 </script>

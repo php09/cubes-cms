@@ -79,5 +79,12 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
     public function disableMember($id) {
         $this->update(array('status' => self::STATUS_DISABLED), 'id = ' . $id);
     }
+    
+    public function updateOrderOfMember($sortedIds) {
+        foreach($sortedIds as $orderNumber=>$id) {
+            $this->update(array('order_number' => $orderNumber + 1), 'id = ' . $id);
+        }
+    }
+    
 
 }
