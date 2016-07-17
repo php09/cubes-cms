@@ -69,7 +69,7 @@ class Application_Model_DbTable_CmsServices extends Zend_Db_Table_Abstract
      * @param int $id Id of the service to delete
      */
     public function deleteService($id) {
-        $this->updateOrder($order);
+        $this->delete('id = ' . $id);
     }
     
     /**
