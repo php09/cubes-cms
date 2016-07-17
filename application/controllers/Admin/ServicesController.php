@@ -223,7 +223,7 @@ class Admin_ServicesController extends Zend_Controller_Action
             
         }
         
-                public function enableAction() {
+        public function enableAction() {
             
             $request = $this->getRequest();
             
@@ -239,9 +239,7 @@ class Admin_ServicesController extends Zend_Controller_Action
             
             $flashMessenger = $this->getHelper('FlashMessenger');
             
-            
             try {
-                
                 
             $id = (int) $request->getPost("id");
             
@@ -283,11 +281,69 @@ class Admin_ServicesController extends Zend_Controller_Action
                                 ), 'default', true);
                 
             }
-            
-		
-            
         }
         
+        public function updateorderAction() {
+            
+            $request = $this->getRequest();
+            
+            if(!$request->isPost() || $request->getPost('task') != 'saveorder' ) {
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true);
+            }
+            
+            $flashMessenger = $this->getHelper('FlashMessenger');
+            
+            
+            try {
+                
+                $sortedIds = $request->getPost('sorted_ids');
+                
+                if(empty($sortedIds)) {
+                    throw new Application_Model_Exception_InvalidInput('Sorted ids are not sent.');
+                }
+                
+                $sortedIds = trim($sortedIds, " ,");
+                
+                if(!preg_match('/^[0-9]+(,[0-9]+)*$/', $sortedIds)) {
+                    throw new Application_Model_Exception_InvalidInput("Invalid sorted ids.", $sortedIds);
+                }
+                
+                $sortedIds = explode(',', $sortedIds);
+                
+                $cmsServicesTable = new Application_Model_DbTable_CmsServices;
+                
+                $cmsServicesTable->updateOrderOfService($sortedIds);
+                
+                $flashMessenger->addMessage("Order is successfully saved", 'success');
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true); 
+                
+            } catch (Application_Model_Exception_InvalidInput $ex) {
+                
+                $flashMessenger->addMessage($ex->getMessage());
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_services',
+                                'action' => 'index'
+                                ), 'default', true); 
+                
+            }
+            
+            
+        }
         
         
     

@@ -224,17 +224,17 @@ $this->inlineScript()->appendFile($this->baseUrl("/admin/bower_components/jquery
     });
     
     
-        $('#table-rows').on('click', "[data-action='enable']", function(e) {
+    $('#table-rows').on('click', "[data-action='enable']", function(e) {
         e.preventDefault();
         e.stopPropagation();
         
         var target = $(this).is("[data-action='enable']") ? $(this) : $(this).closest("[data-action='enable']");
         var memberId = target.attr('data-member-id');
         var memberInfo = target.attr('data-memberInfo');
-        var memberId = target.data("memberId");
+        
 //        alert(memberId);
-        $('#delete-warning-dialog').find('[name = "id"]'). //alternativni nacini
-//        $('#enable-warning-dialog [name = "id"] ').val(memberId) //alternativni nacin
+//        $('#enable-warning-dialog').find('[name = "id"]'). //alternativni nacini
+        $('#enable-warning-dialog [name = "id"] ').val(memberId) //alternativni nacin
         $('#enable-user').text(memberInfo);
         $('#enable-warning-dialog').modal('show');
         
@@ -262,9 +262,7 @@ $this->inlineScript()->appendFile($this->baseUrl("/admin/bower_components/jquery
                     $('[data-action="save-order"]').hide();
                     
         } else {
-            
-            sortableTbody
-            
+
             target.addClass('active');
            
             //method html
@@ -302,7 +300,7 @@ $this->inlineScript()->appendFile($this->baseUrl("/admin/bower_components/jquery
         
         saveOrderForm.find('[name="sorted_ids"]').val( memberSortedIds.join(","));
         
-        saveOrderForm.trigger('submit')
+        saveOrderForm.trigger('submit');
         
     });
     

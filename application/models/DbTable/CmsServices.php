@@ -76,4 +76,10 @@ class Application_Model_DbTable_CmsServices extends Zend_Db_Table_Abstract
         $this->update(array('status' => self::STATUS_DISABLED), 'id = ' . $id);
     }
     
+    public function updateOrderOfService($sortedIds) {
+        foreach($sortedIds as $orderNumber=>$id) {
+            $this->update(array('order_number' => $orderNumber + 1), 'id = ' . $id);
+        }
+    }
+    
 }
