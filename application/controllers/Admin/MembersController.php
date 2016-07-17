@@ -208,10 +208,12 @@ class Admin_MembersController extends Zend_Controller_Action
                 
                 throw new Application_Model_Exception_InvalidInput("No member is found with id: " . $id );
 
-            }
+            }$order = $member['order_number'];
             
                 $cmsMembersTable->deleteMember($id);
                 $flashMessenger->addMessage("Member " . $member["first_name"] . " " . $member["last_name"] . " has been deleted." , "success");
+                
+                $cmsMembersTable->update( array( 'order_number' => new Zend_Db_Expr('order_number - 1')), 'order_number > ' . $order);
                 
                 $redirector = $this->getHelper('Redirector');
                 $redirector->setExit(true)

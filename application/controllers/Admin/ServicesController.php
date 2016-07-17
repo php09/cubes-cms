@@ -131,8 +131,12 @@ class Admin_ServicesController extends Zend_Controller_Action
 
             }
             
+            $order = $service['order_number'];
+            
                 $cmsServicesTable->deleteService($id);
                 $flashMessenger->addMessage("Service " . $service["title"] . " has been deleted." , "success");
+                
+                $cmsServicesTable->update( array( 'order_number' => new Zend_Db_Expr('order_number - 1')), 'order_number > ' . $order);
                 
                 $redirector = $this->getHelper('Redirector');
                 $redirector->setExit(true)
