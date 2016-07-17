@@ -41,12 +41,27 @@ class Application_Model_DbTable_CmsServices extends Zend_Db_Table_Abstract
     }
     
     /**
+     * Function returns following sql query:
+     * SELECT MAX(order_number) AS max FROM `cms_services`
+     * @return int Maximum of the order_number column
+     */
+    public function getMaxOrderNumber() {
+        
+        $max = $this->select();
+        $max->from($this, new Zend_Db_Expr('MAX(order_number) AS max'));
+        $max = $this->fetchRow($max);     
+        
+        return $max['max'] + 1;
+    }
+    
+    /**
      * 
      * @param Array $service Associative array with keys as column names and values as column new values
      * @return int The id of new service (auto increment)
      */
     public function insertService($service) {
 
+        $service['order_number'] = $this->getMaxOrderNumber();
         $id = $this->insert($service);
         
         return $id;
