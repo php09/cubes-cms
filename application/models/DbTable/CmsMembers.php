@@ -51,7 +51,7 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
         $max->from($this, new Zend_Db_Expr('MAX(order_number) AS max'));
         $max = $this->fetchRow($max);     
         
-        return $max['max'] + 1;
+        return $max['max'];
     }
     
     
@@ -61,10 +61,7 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
      * @return int The id of new member (auto increment)
      */
     public function insertMember($member) {
-        
-        $member['order_number'] = $this->getMaxOrderNumber();
-        
-        
+
         //insert vraca id od insertovanog membera
         $id = $this->insert($member);
         

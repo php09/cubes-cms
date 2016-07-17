@@ -64,6 +64,10 @@ class Admin_MembersController extends Zend_Controller_Action
                                 
                                 //inserujemo novi zapis instanciramo klasi
                                 $cmsMembersTable = new Application_Model_DbTable_CmsMembers();
+                                        
+                                $formData['order_number'] = $cmsMembersTable->getMaxOrderNumber() + 1;
+        
+        
                                 $cmsMembersTable->insertMember($formData);
                                 
 

@@ -75,6 +75,7 @@ class Admin_ServicesController extends Zend_Controller_Action
                 }
                 $formData = $form->getValues();
                 $cmsServicesDbTable = new Application_Model_DbTable_CmsServices();
+                $formData['order_number'] = $cmsServicesDbTable->getMaxOrderNumber() + 1;
                 $cmsServicesDbTable->insertService($formData);
                 $flashMessenger->addMessage('Service has been saved', 'success');
                 $redirector = $this->getHelper('Redirector');
