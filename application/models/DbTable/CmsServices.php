@@ -60,6 +60,7 @@ class Application_Model_DbTable_CmsServices extends Zend_Db_Table_Abstract
      * @return int The id of new service (auto increment)
      */
     public function insertService($service) {
+        $service['order_number'] = $this->getMaxOrderNumber() + 1;
         $id = $this->insert($service);
         return $id;
     }
@@ -68,8 +69,9 @@ class Application_Model_DbTable_CmsServices extends Zend_Db_Table_Abstract
      * 
      * @param int $id Id of the service to delete
      */
-    public function deleteService($id) {
+    public function deleteService($id, $order) {
         $this->delete('id = ' . $id);
+        $this->update( array( 'order_number' => new Zend_Db_Expr('order_number - 1')), 'order_number > ' . $order);
     }
     
     /**

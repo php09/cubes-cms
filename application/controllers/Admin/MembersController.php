@@ -64,12 +64,8 @@ class Admin_MembersController extends Zend_Controller_Action
                                 
                                 //inserujemo novi zapis instanciramo klasi
                                 $cmsMembersTable = new Application_Model_DbTable_CmsMembers();
-                                        
-                                $formData['order_number'] = $cmsMembersTable->getMaxOrderNumber() + 1;
-        
-        
-                                $cmsMembersTable->insertMember($formData);
                                 
+                                $cmsMembersTable->insertMember($formData);
 
 				// do actual task
 				//save to database etc
@@ -208,12 +204,10 @@ class Admin_MembersController extends Zend_Controller_Action
                 
                 throw new Application_Model_Exception_InvalidInput("No member is found with id: " . $id );
 
-            }$order = $member['order_number'];
+            }
             
-                $cmsMembersTable->deleteMember($id);
+                $cmsMembersTable->deleteMember($id, $member['order_number']);
                 $flashMessenger->addMessage("Member " . $member["first_name"] . " " . $member["last_name"] . " has been deleted." , "success");
-                
-                $cmsMembersTable->update( array( 'order_number' => new Zend_Db_Expr('order_number - 1')), 'order_number > ' . $order);
                 
                 $redirector = $this->getHelper('Redirector');
                 $redirector->setExit(true)

@@ -75,7 +75,7 @@ class Admin_ServicesController extends Zend_Controller_Action
                 }
                 $formData = $form->getValues();
                 $cmsServicesDbTable = new Application_Model_DbTable_CmsServices();
-                $formData['order_number'] = $cmsServicesDbTable->getMaxOrderNumber() + 1;
+                
                 $cmsServicesDbTable->insertService($formData);
                 $flashMessenger->addMessage('Service has been saved', 'success');
                 $redirector = $this->getHelper('Redirector');
@@ -131,12 +131,8 @@ class Admin_ServicesController extends Zend_Controller_Action
 
             }
             
-            $order = $service['order_number'];
-            
-                $cmsServicesTable->deleteService($id);
+                $cmsServicesTable->deleteService($id, $service['order_number']);
                 $flashMessenger->addMessage("Service " . $service["title"] . " has been deleted." , "success");
-                
-                $cmsServicesTable->update( array( 'order_number' => new Zend_Db_Expr('order_number - 1')), 'order_number > ' . $order);
                 
                 $redirector = $this->getHelper('Redirector');
                 $redirector->setExit(true)

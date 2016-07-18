@@ -61,6 +61,7 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
      * @return int The id of new member (auto increment)
      */
     public function insertMember($member) {
+        $member['order_number'] = $this->getMaxOrderNumber() + 1;
 
         //insert vraca id od insertovanog membera
         $id = $this->insert($member);
@@ -72,8 +73,9 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
      * 
      * @param int $id Id of the member to delete
      */
-    public function deleteMember($id) {
+    public function deleteMember($id, $order) {
         $this->delete('id = ' . $id);        
+        $this->update( array( 'order_number' => new Zend_Db_Expr('order_number - 1')), 'order_number > ' . $order);
     }
     
     /**
