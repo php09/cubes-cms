@@ -61,21 +61,50 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
      * @return int The id of new member (auto increment)
      */
     public function insertMember($member) {
-        $member['order_number'] = $this->getMaxOrderNumber() + 1;
+//        $member['order_number'] = $this->getMaxOrderNumber() + 1;
+        
+//        $this->select()->order('order_number DESC')
+//                ->limit(1);
+        
+        $select = $this->select();
+        
+        $select->order('order_number DESC');
 
+        $memberWithBiggestOrderNumber = $this->fetchRow($select);
+        
+        if($memberWithBiggestOrderNumber instanceof Zend_Db_Table_Row) {
+            $member['order_number'] = $memberWithBiggestOrderNumber['order_number'] + 1;
+        } else {
+            $member['order_number'] = 1;
+        }
+        
         //insert vraca id od insertovanog membera
         $id = $this->insert($member);
         
         return $id;
     }
     
+//    /**
+//     * 
+//     * @param int $id Id of the member to delete
+//     */
+//    public function deleteMember($id, $order) {
+//        $this->delete('id = ' . $id);        
+//        $this->update( array( 'order_number' => new Zend_Db_Expr('order_number - 1')), 'order_number > ' . $order);
+//    }
+    
     /**
      * 
      * @param int $id Id of the member to delete
      */
-    public function deleteMember($id, $order) {
-        $this->delete('id = ' . $id);        
-        $this->update( array( 'order_number' => new Zend_Db_Expr('order_number - 1')), 'order_number > ' . $order);
+    public function deleteMember($id) {
+        $member = $this->getMemberById($id);
+        
+        $this->update( array(
+            'order_number' => new Zend_Db_Expr('order_number - 1') 
+            ), 'order_number' > $member['order_number']);
+        
+        $this->delete('id = ' . $id);
     }
     
     /**

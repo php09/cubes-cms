@@ -61,12 +61,39 @@ class Admin_MembersController extends Zend_Controller_Action
 				//get form data
 				$formData = $form->getValues(); //filtrirani i validirani podaci
                                 
+                                unset($formData['member_photo']); //posto baca gresku jer u bazi ne postoji polje member_photo zato ga brisemo
                                 
                                 //inserujemo novi zapis instanciramo klasi
                                 $cmsMembersTable = new Application_Model_DbTable_CmsMembers();
                                 
-                                $cmsMembersTable->insertMember($formData);
+                                $memberId = $cmsMembersTable->insertMember($formData);
 
+                                if( $form->getElement("member_photo")->isUploaded() ) {
+                                
+                                    $fileInfos = $form->getElement("member_photo")->getFileInfo('member_photo');
+                                    $fileInfo = $fileInfos["member_photo"];
+                                    
+                                    try {
+                                        $memberPhoto = Intervention\Image\ImageManagerStatic::make($fileInfo["tmp_name"]);
+                                        $memberPhoto->fit(150, 150);
+                                        $memberPhoto->save(PUBLIC_PATH . '/uploads/members/' . $memberId . '.jpg'); //na osnovu ovde navedene ekstenzije automatski i konvertuje u taj format
+                                    } catch (Exception $ex) {
+                                        
+                                        $flashMessenger->addMessage('Member has been saved but error occured during image processing.', 'errors');
+
+                                        $redirector = $this->getHelper('Redirector');
+                                        $redirector->setExit(true)
+                                                ->gotoRoute(array(
+                                                        'controller' => 'admin_members',
+                                                        'action' => 'edit',
+                                                        'id' => $memberId
+                                                                    ), 'default', true);
+                                        
+                                    }
+                                    
+                                    
+                                }
+                                
 				// do actual task
 				//save to database etc
 				
@@ -138,6 +165,30 @@ class Admin_MembersController extends Zend_Controller_Action
 				//get form data
 				$formData = $form->getValues(); //filtrirani i validirani podaci
                                 
+                                unset($formData['member_photo']); //posto baca gresku jer u bazi ne postoji polje member_photo zato ga brisemo
+                                
+                                
+                                
+                                if( $form->getElement("member_photo")->isUploaded() ) {
+                                
+                                    $fileInfos = $form->getElement("member_photo")->getFileInfo('member_photo');
+                                    $fileInfo = $fileInfos["member_photo"];
+                                    
+                                    try {
+                                        $memberPhoto = Intervention\Image\ImageManagerStatic::make($fileInfo["tmp_name"]);
+                                        $memberPhoto->fit(150, 150);
+                                        $memberPhoto->save(PUBLIC_PATH . '/uploads/members/' . $member['id'] . '.jpg'); //na osnovu ovde navedene ekstenzije automatski i konvertuje u taj format
+                                    } catch (Exception $ex) {
+                                        
+                                        throw new Application_Model_Exception_InvalidInput('Error occured during image processing.');
+                                        
+                                    }
+                                    
+                                    
+                                }
+                                
+                                
+                                
                                 
                                 //radimo update postojeceg zapisa u tabeli
                                 $cmsMembersTable->updateMember("id = " . $member['id'], $formData);
@@ -206,7 +257,9 @@ class Admin_MembersController extends Zend_Controller_Action
 
             }
             
-                $cmsMembersTable->deleteMember($id, $member['order_number']);
+//                $cmsMembersTable->deleteMember($id, $member['order_number']);
+                $cmsMembersTable->deleteMember($id);
+                
                 $flashMessenger->addMessage("Member " . $member["first_name"] . " " . $member["last_name"] . " has been deleted." , "success");
                 
                 $redirector = $this->getHelper('Redirector');

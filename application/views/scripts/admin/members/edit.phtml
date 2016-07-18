@@ -32,8 +32,8 @@
                 <!----form start-------> 
 
 
-                <form class="form-horizontal" method="post">
-                    <input type="hidden" name="task" value="update">
+                <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="task" value="update" >
                     
                     <fieldset>
 
@@ -162,6 +162,29 @@
 								<?php if ($form->getElement('resume')->hasErrors()) {?>
                                                                 <div class="has-error">
                                                                         <?php foreach ($form->getElement('resume')->getMessages() as $message) {?>
+                                                                        <p class="help-block"><?php echo $this->escape($message);?></p>
+                                                                        <?php }?>
+                                                                </div>
+                                                                <?php }?>
+							</div>
+						</div>
+                                                
+                                                <!--  -->
+						<div class="form-group">
+							<label class="col-md-4 control-label" for="member_photo">Picture</label>
+							<div class="col-md-4"> 
+                                                            <div>
+                                                                <a href="#" class="thumbnail"><img src="<?php echo $this->memberImgUrl($this->member) ;?>"></a>
+                                                            </div>
+                                                            
+                                                            <input class="form-control input-md" type="file" name="member_photo" id="member_photo">
+                                                            <span class="help-block">Change photo</span>  
+							</div>
+							
+							<div class="col-md-4">
+								<?php if ($form->getElement('member_photo')->hasErrors()) {?>
+                                                                <div class="has-error">
+                                                                        <?php foreach ($form->getElement('member_photo')->getMessages() as $message) {?>
                                                                         <p class="help-block"><?php echo $this->escape($message);?></p>
                                                                         <?php }?>
                                                                 </div>
