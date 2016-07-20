@@ -70,6 +70,7 @@ $user = Zend_Auth::getInstance()->getIdentity();
                         <li class="divider"></li>
                         <li><a href="<?php echo $this->url(array('controller' => 'admin_session', 'action' => 'logout'), 'default', true)  ;?>""><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
+                        
                     </ul>
                     <!-- /.dropdown-user -->
                 </li>
@@ -88,6 +89,9 @@ $user = Zend_Auth::getInstance()->getIdentity();
                         </li>
                         <li>
                             <a href="<?php echo $this->url(array('controller' => 'admin_services'), 'default', true);?>"><i class="fa fa-list fa-fw"></i> Services</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo $this->url(array('controller' => 'admin_users'), 'default', true);?>"><i class="fa fa-user fa-fw"></i> Users</a>
                         </li>
                     </ul>
                 </div>
