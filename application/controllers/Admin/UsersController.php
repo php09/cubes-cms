@@ -157,10 +157,194 @@ class Admin_UsersController extends Zend_Controller_Action
     }
     
     public function enableAction() {
+        $request = $this->getRequest();
+            
+        if(!$request->isPost() || $request->getPost('task') != 'enable' ) {
+                
+            $redirector = $this->getHelper('Redirector');
+            $redirector->setExit(true)
+                        ->gotoRoute(array(
+                            'controller' => 'admin_users',
+                            'action' => 'index'
+                            ), 'default', true);
+            }
+            
+        $flashMessenger = $this->getHelper('FlashMessenger');
+            
+            
+        try {
+
+
+        $id = (int) $request->getPost("id");
+
+        if($id <= 0) {
+
+            throw new Application_Model_Exception_InvalidInput("Invalid user id: " . $id );
+
+        }
+
+        $cmsUsersTable = new Application_Model_DbTable_CmsUsers;
+
+        $user = $cmsUsersTable->getUserById($id);
+
+        if( empty($user) ) {
+
+            throw new Application_Model_Exception_InvalidInput("No user is found with id: " . $id );
+
+        }
+
+            $cmsUsersTable->enableUser($id);
+            $flashMessenger->addMessage("User " . $user["first_name"] . " " . $user["last_name"] . " has been enabled." , "success");
+
+            $redirector = $this->getHelper('Redirector');
+            $redirector->setExit(true)
+                        ->gotoRoute(array(
+                            'controller' => 'admin_users',
+                            'action' => 'index'
+                            ), 'default', true);
+
+        } catch (Application_Model_Exception_InvalidInput $ex) {
+
+            $flashMessenger->addMessage($ex->getMessage());
+
+            $redirector = $this->getHelper('Redirector');
+            $redirector->setExit(true)
+                        ->gotoRoute(array(
+                            'controller' => 'admin_users',
+                            'action' => 'index'
+                            ), 'default', true);
+
+        }
+
+		
         
     }
     
     public function disableAction() {
         
+        $request = $this->getRequest();
+            
+            if(!$request->isPost() || $request->getPost('task') != 'disable' ) {
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_users',
+                                'action' => 'index'
+                                ), 'default', true);
+            }
+            
+            $flashMessenger = $this->getHelper('FlashMessenger');
+            
+            
+            try {
+                
+                
+            $id = (int) $request->getPost("id");
+            
+            if($id <= 0) {
+                
+                throw new Application_Model_Exception_InvalidInput("Invalid user id: " . $id );
+                
+            }
+            
+            $cmsUsersTable = new Application_Model_DbTable_CmsUsers;
+            
+            $user = $cmsUsersTable->getUserById($id);
+            
+            if( empty($user) ) {
+                
+                throw new Application_Model_Exception_InvalidInput("No user is found with id: " . $id );
+
+            }
+            
+                $cmsUsersTable->disableUser($id);
+                $flashMessenger->addMessage("User " . $user["first_name"] . " " . $user["last_name"] . " has been disabled." , "success");
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_users',
+                                'action' => 'index'
+                                ), 'default', true);
+
+            } catch (Application_Model_Exception_InvalidInput $ex) {
+
+                $flashMessenger->addMessage($ex->getMessage());
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_users',
+                                'action' => 'index'
+                                ), 'default', true);
+                
+            }
+            
     }
+    
+        public function resetpasswordAction() {
+                
+            $request = $this->getRequest();
+            
+            if(!$request->isPost() || $request->getPost('task') != 'reset' ) {
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_users',
+                                'action' => 'index'
+                                ), 'default', true);
+            }
+            
+            $flashMessenger = $this->getHelper('FlashMessenger');
+            
+            
+            try {
+                
+                
+            $id = (int) $request->getPost("id");
+            
+            if($id <= 0) {
+                
+                throw new Application_Model_Exception_InvalidInput("Invalid user id: " . $id );
+                
+            }
+            
+            $cmsUsersTable = new Application_Model_DbTable_CmsUsers;
+            
+            $user = $cmsUsersTable->getUserById($id);
+            
+            if( empty($user) ) {
+                
+                throw new Application_Model_Exception_InvalidInput("No user is found with id: " . $id );
+
+            }
+            
+                $cmsUsersTable->resetPassword($id);
+                $flashMessenger->addMessage("User's password (" . $user["first_name"] . " " . $user["last_name"] . ") has been reset." , "success");
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_users',
+                                'action' => 'index'
+                                ), 'default', true);
+
+            } catch (Application_Model_Exception_InvalidInput $ex) {
+
+                $flashMessenger->addMessage($ex->getMessage());
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_users',
+                                'action' => 'index'
+                                ), 'default', true);
+                
+            }
+            
+        }
+    
+    
 }

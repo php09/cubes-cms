@@ -64,4 +64,24 @@ class Application_Model_DbTable_CmsUsers extends Zend_Db_Table_Abstract
         return $this->insert($user);
     }
     
+    /**
+     * 
+     * @param int $id Id of the member to enagle
+     */
+        public function enableUser($id) {
+        $this->update(array('status' => self::STATUS_ENABLED), 'id = ' . $id);
+    }
+    
+    /**
+     * 
+     * @param int $id Id of the member to disable
+     */
+    public function disableUser($id) {
+        $this->update(array('status' => self::STATUS_DISABLED), 'id = ' . $id);
+    }
+    
+    public function resetPassword($id) {
+        $this->update(array('password' => md5(self::DEFAULT_PASSWORD)), 'id = ' . $id);
+    }
+    
 }
