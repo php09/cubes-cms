@@ -14,9 +14,15 @@ class Admin_UsersController extends Zend_Controller_Action
         );
         
         $cmsUsersDbTable = new Application_Model_DbTable_CmsUsers();
-        $users = $cmsUsersDbTable->fetchAll()->toArray();
-        $this->view->users = $users;
         
+        $loggedInUser = Zend_Auth::getInstance()->getIdentity();
+        
+        $users = $cmsUsersDbTable->search(
+                array(
+                    'filters' => array( 'id_exclude' => $loggedInUser['id']),
+                    'orders' => array('status' => 'ASC', 'first_name' => 'DESC') ));
+        $this->view->users = $users;
+            
         $this->view->systemMessages = $systemMessages;
         
     }
