@@ -346,5 +346,72 @@ class Admin_UsersController extends Zend_Controller_Action
             
         }
     
+        
+        public function deleteAction() {
+            
+            $request = $this->getRequest();
+            
+            if(!$request->isPost() || $request->getPost('task') != 'delete' ) {
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_users',
+                                'action' => 'index'
+                                ), 'default', true);
+            }
+            
+            $flashMessenger = $this->getHelper('FlashMessenger');
+            
+            
+            try {
+                
+                
+            $id = (int) $request->getPost("id");
+            
+            if($id <= 0) {
+                
+                throw new Application_Model_Exception_InvalidInput("Invalid user id: " . $id );
+                
+            }
+            
+            $cmsUsersTable = new Application_Model_DbTable_CmsUsers;
+            
+            $users = $cmsUsersTable->getUserById($id);
+            
+            if( empty($users) ) {
+                
+                throw new Application_Model_Exception_InvalidInput("No user is found with id: " . $id );
+
+            }
+            
+//                $cmsMembersTable->deleteMember($id, $member['order_number']);
+                $cmsUsersTable->deleteUser($id);
+                
+                $flashMessenger->addMessage("User " . $user["first_name"] . " " . $user["last_name"] . " has been deleted." , "success");
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_users',
+                                'action' => 'index'
+                                ), 'default', true);
+
+            } catch (Application_Model_Exception_InvalidInput $ex) {
+
+                $flashMessenger->addMessage($ex->getMessage());
+                
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'controller' => 'admin_users',
+                                'action' => 'index'
+                                ), 'default', true);
+                
+            }
+            
+		
+            
+        }
     
 }

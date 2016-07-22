@@ -84,4 +84,12 @@ class Application_Model_DbTable_CmsUsers extends Zend_Db_Table_Abstract
         $this->update(array('password' => md5(self::DEFAULT_PASSWORD)), 'id = ' . $id);
     }
     
+        /**
+     * 
+     * @param int $id Id of the user to delete
+     */
+    public function deleteUser($id) {
+        $this->delete('id = ' . $id);
+    }
+    
 }
