@@ -1,0 +1,85 @@
+<?php Zend_Layout::getMvcInstance()->disableLayout() ;?>
+
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+	<h1>Choose your car brand/model</h1>
+	<form action="" method="post">
+		<p>
+		<label>Brand</label>
+		<select id="car-brand">
+			<option value="">--- Choose Brand ---</option>
+		</select>
+		</p>
+		<p>
+		<label>Model</label>
+		<select id="car-model">
+			<option value="">--- Choose Model ---</option>
+		</select>
+		</p>
+	</form>
+        
+        <script src='<?php echo $this->baseUrl('/admin/bower_components/jquery/dist/jquery.min.js');?>'></script>
+        <script>
+        
+//        $.ajax('test.html', {}); //prvi nacin pozivanja
+        $.ajax({
+                url: '<?php echo $this->url( array('controller' => 'admin_test', 'action' => 'ajaxbrands'), 'default', true);?>',
+                cash: false
+        }).done(function( data, textStatus, jqXHR ) {
+            
+            for(var index in data) {
+                
+                var brand = data[index];
+                
+                var selectOption = $('<option></option>');
+                selectOption.attr('value', brand.value);
+                selectOption.html(brand.label);
+                $('#car-brand').append(selectOption);
+            }
+
+        })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    alert('Error occured while loading car brands!');
+                })
+                .always(function() {});
+        
+        $('#car-brand').on('change', function(e) {
+//            e.preventDefault();
+            e.stopPropagation();
+            
+            var target = $(this).is('#car-brand') ? $(this) : $(this).closest('#car-brand');
+            var brand = target.val();
+            
+            var modelSelect = $('#car-model');
+            modelSelect.empty();
+            modelSelect.append('<option value="">--- Choose Model ---</option>');
+            
+            if(brand) {
+                $.ajax({
+                    url: '/uploads/cars/' + brand + '.json',
+                    cache: false
+                }).done(function(data) {
+                    for(var index in data) {
+                        var model = data[index];
+                        
+                        var selectOption = $('<option></option>');
+                        selectOption.attr('value', model.value);
+                        selectOption.text(model.label);
+                        modelSelect.append(selectOption);
+                    }
+                        
+                }).fail(function() {
+                    alert('Unable to load models for brand!');
+                }).always({
+                    
+                });
+            }
+                
+            
+        });
+        
+        </script>
+</body>
+</html>
