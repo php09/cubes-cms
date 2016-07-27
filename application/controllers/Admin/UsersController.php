@@ -12,16 +12,8 @@ class Admin_UsersController extends Zend_Controller_Action
                 'success' => $flashMessenger->getMessages('success'),
                 'errors' => $flashMessenger->getMessages('errors')
         );
-        
-        $cmsUsersDbTable = new Application_Model_DbTable_CmsUsers();
-        
-        $loggedInUser = Zend_Auth::getInstance()->getIdentity();
-        
-        $users = $cmsUsersDbTable->search(
-                array(
-                    'filters' => array( 'id_exclude' => $loggedInUser['id']),
-                    'orders' => array('status' => 'ASC', 'first_name' => 'DESC') ));
-        $this->view->users = $users;
+
+        $this->view->users = array();
             
         $this->view->systemMessages = $systemMessages;
         
@@ -420,4 +412,108 @@ class Admin_UsersController extends Zend_Controller_Action
             
         }
     
+        public function datatableAction() {
+            
+            $request = $this->getRequest();
+            
+            $datatableParameters = $request->getParams();
+            
+            
+            /*
+            Array
+                (
+                    [controller] => admin_users
+                    [action] => datatable
+                    [module] => default
+                    [draw] => 1
+                    [order] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [column] => 2
+                                    [dir] => asc
+                                )
+
+                        )
+
+                    [start] => 0
+                    [length] => 3
+                    [search] => Array
+                        (
+                            [value] => 
+                            [regex] => false
+                        )
+
+                )
+             */
+            
+            $cmsUsersTable = new Application_Model_DbTable_CmsUsers();
+            
+            $loggedInUser = Zend_Auth::getInstance()->getIdentity();
+            
+            $filters = array(
+                'id_exclude' => $loggedInUser['id']
+            );
+            $orders = array();
+            $limit = 5;
+            $page = 1;
+            $draw = 1;
+            
+            $columns = array('status', 'username','first_name', 'last_name', 'email', 'actions');
+            
+            if(isset($datatableParameters['draw'])) {
+                $draw = $datatableParameters['draw'];
+                
+                if( isset($datatableParameters['length'])) {
+                    $limit = $datatableParameters['length'];
+                    
+                    if(isset($datatableParameters['start'])) {
+                        $page = floor($datatableParameters['start'] / $datatableParameters['length']) + 1;
+                    }
+                    
+                } 
+                
+            }
+            
+            if ( isset($datatableParameters['order']) && is_array($datatableParameters['order']) ) {
+                
+                foreach($datatableParameters['order'] AS $datatableOrder) {
+                    $columnIndex = $datatableOrder['column'];
+                    $orderDirection = strtoupper($datatableOrder['dir']);
+                    
+                    if(isset($columns[$columnIndex])) {
+                    
+                        $orders[$columns[$columnIndex]] = $orderDirection;
+                    
+                    }
+                }
+                
+            }
+            
+            if( isset($datatableParameters['search']) 
+                    && is_array($datatableParameters['search'])
+                    && isset($datatableParameters['search']['value'])
+                    ) {
+                $filters['username_search'] = $datatableParameters['search']['value'];
+            }
+            
+            $usersFilteredCount = $cmsUsersTable->count($filters);
+            $usersTotal = $cmsUsersTable->count();
+            
+            
+            
+            $users = $cmsUsersTable->search(array(
+                'filters' => $filters,
+                'orders' => $orders,
+                'limit' => $limit,
+                'page' => $page
+            ));
+            
+            $this->view->users = $users;
+            $this->view->usersTotal = $usersTotal;
+            $this->view->usersFilteredCount = $usersFilteredCount;
+            $this->view->draw = $draw;
+            $this->view->columns = $columns;
+        }
+        
 }

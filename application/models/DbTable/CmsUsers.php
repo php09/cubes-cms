@@ -168,7 +168,7 @@ class Application_Model_DbTable_CmsUsers extends Zend_Db_Table_Abstract
         $this->processFilters($filters, $select);
         
         $select->reset('columns');
-        $select->columns('COUNT(*) AS total');
+        $select->from( $this->_name, 'COUNT(*) AS total');
         
         $row = $this->fetchRow($select)->total;
         

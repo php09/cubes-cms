@@ -104,6 +104,11 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
             'order_number' => new Zend_Db_Expr('order_number - 1') 
             ), 'order_number' > $member['order_number']);
         
+        $memberPhotoFilePath = PUBLIC_PATH . '/uploads/members/' . $id . '.jpg';
+        if(is_file($memberPhotoFilePath)) {
+            unlink($memberPhotoFilePath);
+        }
+        
         $this->delete('id = ' . $id);
     }
     

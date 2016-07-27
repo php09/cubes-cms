@@ -81,6 +81,8 @@ class Admin_TestController extends Zend_Controller_Action
             )
         );
         
+        
+        
         $request = $this->getRequest();
         
         $brand = $request->getParam('brand');
@@ -89,6 +91,18 @@ class Admin_TestController extends Zend_Controller_Action
             throw new Zend_Controller_Router_Exception(' unknown brand', 404);
         }
         
+        $models = $models[$brand];
+        
+        $modelsJson = array();
+        
+        foreach($models AS $modelId => $modelLabel) {
+            $modelsJson[] = array(
+                'id' => $modelId,
+                'label' => $modelLabel
+            );
+        }
+        
+        $this->getHelper('Json')->sendJson($modelsJson);
         
     }
     

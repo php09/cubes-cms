@@ -58,8 +58,14 @@
             
             if(brand) {
                 $.ajax({
-                    url: '/uploads/cars/' + brand + '.json',
+                    url: '<?php echo $this->url( array('controller' => 'admin_test', 'action' => 'ajaxmodels'), 'default', TRUE) ;?>',
+                    data: {
+                        brand: brand
+                    },
+                    method: 'get',
                     cache: false
+                    
+            
                 }).done(function(data) {
                     for(var index in data) {
                         var model = data[index];
