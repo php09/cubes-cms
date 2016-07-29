@@ -257,6 +257,20 @@ class Admin_UsersController extends Zend_Controller_Action
             }
             
                 $cmsUsersTable->disableUser($id);
+                
+                $request instanceof Zend_Controller_Request_Http;
+                
+                if($request->isXmlHttpRequest()) {
+                    
+                    $responseJson = array(
+                        'status' => 'ok',
+                        'statusMessage' => "User " . $user["first_name"] . " " . $user["last_name"] . " has been disabled."
+                    );
+                    
+                    $this->getHelper('Json')->sendJson($responseJson);
+                    
+                } else {
+                
                 $flashMessenger->addMessage("User " . $user["first_name"] . " " . $user["last_name"] . " has been disabled." , "success");
                 
                 $redirector = $this->getHelper('Redirector');
@@ -265,17 +279,31 @@ class Admin_UsersController extends Zend_Controller_Action
                                 'controller' => 'admin_users',
                                 'action' => 'index'
                                 ), 'default', true);
+                
+                }
 
             } catch (Application_Model_Exception_InvalidInput $ex) {
 
-                $flashMessenger->addMessage($ex->getMessage());
+                if($request->isXmlHttpRequest()) {
+                    
+                    $responseJson = array(
+                        'status' => 'error',
+                        'statusMessage' => $ex->getMessage()
+                    );
+                    
+                    $this->getHelper('Json')->sendJson($responseJson);
+                    
+                } else {
+                    $flashMessenger->addMessage($ex->getMessage());
+
+                    $redirector = $this->getHelper('Redirector');
+                    $redirector->setExit(true)
+                                ->gotoRoute(array(
+                                    'controller' => 'admin_users',
+                                    'action' => 'index'
+                                    ), 'default', true);
+                }
                 
-                $redirector = $this->getHelper('Redirector');
-                $redirector->setExit(true)
-                            ->gotoRoute(array(
-                                'controller' => 'admin_users',
-                                'action' => 'index'
-                                ), 'default', true);
                 
             }
             
