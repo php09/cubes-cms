@@ -5,30 +5,43 @@
     <!-- /.col-lg-12 -->
 </div>
 <div id="content" class="row">
-
 </div>
 
 
 <script>
 <?php $this->inlineScript()->captureStart() ;?>  
 
-var controllers = [
-    '<?php echo $this->url(array('controller' => 'admin_clients', 'action' => 'dashboard'), 'default', true)?>',
-    '<?php echo $this->url(array('controller' => 'admin_members', 'action' => 'dashboard'), 'default', true)?>',
-    '<?php echo $this->url(array('controller' => 'admin_services', 'action' => 'dashboard'), 'default', true)?>',
-    '<?php echo $this->url(array('controller' => 'admin_users', 'action' => 'dashboard'), 'default', true)?>'  
-];
-
-for(var i = 0; i < controllers.length; i++) {
-
-$.ajax({
-        url: controllers[i]
+    $.ajax({
+        url: '<?php echo $this->url(array('controller' => 'admin_clients', 'action' => 'dashboard'), 'default', true)?>'
     }).done( function(data) {
         $('#content').append(data);
     }).fail( function() {
-        alert("Error while loading dashboard on path " + controllers[i]);
+        alert("Error while loading dashboard clients.");
     });
-}
     
+    $.ajax({
+        url: '<?php echo $this->url(array('controller' => 'admin_members', 'action' => 'dashboard'), 'default', true)?>'
+    }).done( function(data) {
+        $('#content').append(data);
+    }).fail( function() {
+        alert("Error while loading dashboard members.");
+    });
+    
+    $.ajax({
+        url: '<?php echo $this->url(array('controller' => 'admin_services', 'action' => 'dashboard'), 'default', true)?>',
+    }).done( function(data) {
+        $('#content').append(data);
+    }).fail( function() {
+        alert("Error while loading dashboard services.");
+    });
+    
+    $.ajax({
+        url: '<?php echo $this->url(array('controller' => 'admin_users', 'action' => 'dashboard'), 'default', true)?>'
+    }).done( function(data) {
+        $('#content').append(data);
+    }).fail( function() {
+        alert("Error while loading dashboard users");
+    });
+
 <?php $this->inlineScript()->captureEnd() ;?>
 </script>
