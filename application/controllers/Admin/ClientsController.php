@@ -289,6 +289,28 @@ class Admin_ClientsController extends Zend_Controller_Action
                         ), 'default', true);
         }
     }
-        
+ 
+        public function dashboardAction() {
+            Zend_Layout::getMvcInstance()->disableLayout();
+            
+            $request = $this->getRequest();
+            $request instanceof Zend_Controller_Request_Http;
+            
+            if(!$request->isXmlHttpRequest()) {
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                    ->gotoRoute(array(
+                        'controller' => 'admin_dashboard',
+                        'action' => 'index'
+                        ), 'default', true);
+            }
+            
+            $cmsClientsDbTable = new Application_Model_DbTable_CmsClients();
+            $totalClients = $cmsClientsDbTable->totalNumberOfClients();
+            $activeClients = $cmsClientsDbTable->numberOfActiveClients();
+            
+            $this->view->totalClients = $totalClients;
+            $this->view->activeClients = $activeClients;
+        }
 
 }

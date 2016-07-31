@@ -543,5 +543,28 @@ class Admin_UsersController extends Zend_Controller_Action
             $this->view->draw = $draw;
             $this->view->columns = $columns;
         }
+
+        public function dashboardAction() {
+            Zend_Layout::getMvcInstance()->disableLayout();
+            
+            $request = $this->getRequest();
+            $request instanceof Zend_Controller_Request_Http;
+            
+            if(!$request->isXmlHttpRequest()) {
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                    ->gotoRoute(array(
+                        'controller' => 'admin_dashboard',
+                        'action' => 'index'
+                        ), 'default', true);
+            }
+            
+            $cmsUsersTable = new Application_Model_DbTable_CmsUsers();
+            $totalUsers = $cmsUsersTable->totalNumberOfUsers();
+            $activeUsers = $cmsUsersTable->numberOfActiveUsers();
+            
+            $this->view->totalUsers = $totalUsers;
+            $this->view->activeUsers = $activeUsers;
+        }
         
 }

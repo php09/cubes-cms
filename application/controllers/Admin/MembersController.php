@@ -479,7 +479,28 @@ class Admin_MembersController extends Zend_Controller_Action
                                 ), 'default', true); 
                 
             }
+        }
+        
+        public function dashboardAction() {
+            Zend_Layout::getMvcInstance()->disableLayout();
             
+            $request = $this->getRequest();
+            $request instanceof Zend_Controller_Request_Http;
             
+            if(!$request->isXmlHttpRequest()) {
+                $redirector = $this->getHelper('Redirector');
+                $redirector->setExit(true)
+                    ->gotoRoute(array(
+                        'controller' => 'admin_dashboard',
+                        'action' => 'index'
+                        ), 'default', true);
+            }
+            
+            $cmsMembersDbTable = new Application_Model_DbTable_CmsMembers();
+            $totalMembers = $cmsMembersDbTable->totalNumberOfMembers();
+            $activeMembers = $cmsMembersDbTable->numberOfActiveMembers();
+            
+            $this->view->totalMembers = $totalMembers;
+            $this->view->activeMembers = $activeMembers;
         }
 }

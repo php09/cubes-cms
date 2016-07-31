@@ -96,4 +96,15 @@ class Application_Model_DbTable_CmsServices extends Zend_Db_Table_Abstract
         }
     }
     
+    public function totalNumberOfServices() {
+        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as total'));
+        $total = $this->fetchRow($select);
+        return $total['total'];
+    }
+    
+    public function numberOfActiveServices() {
+        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as active'))->where('status = ' . self::STATUS_ENABLED);
+        $active = $this->fetchRow($select);
+        return $active['active'];
+    }
 }

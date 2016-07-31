@@ -346,6 +346,29 @@ class Admin_ServicesController extends Zend_Controller_Action
             
         }
         
+        public function dashboardAction() {
+        Zend_Layout::getMvcInstance()->disableLayout();
+
+        $request = $this->getRequest();
+        $request instanceof Zend_Controller_Request_Http;
+
+        if(!$request->isXmlHttpRequest()) {
+            $redirector = $this->getHelper('Redirector');
+            $redirector->setExit(true)
+                ->gotoRoute(array(
+                    'controller' => 'admin_dashboard',
+                    'action' => 'index'
+                    ), 'default', true);
+        }
+
+        $cmsServicesDbTable = new Application_Model_DbTable_CmsServices();
+        $totalServices = $cmsServicesDbTable->totalNumberOfServices();
+        $activeServices = $cmsServicesDbTable->numberOfActiveServices();
+
+        $this->view->totalServices = $totalServices;
+        $this->view->activeServices = $activeServices;
+    }
+        
         
     
 }

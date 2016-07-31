@@ -133,6 +133,18 @@ class Application_Model_DbTable_CmsMembers extends Zend_Db_Table_Abstract
             $this->update(array('order_number' => $orderNumber + 1), 'id = ' . $id);
         }
     }
+
+    public function totalNumberOfMembers() {
+        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as total'));
+        $total = $this->fetchRow($select);
+        return $total['total'];
+    }
+    
+    public function numberOfActiveMembers() {
+        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as active'))->where('status = ' . self::STATUS_ENABLED);
+        $active = $this->fetchRow($select);
+        return $active['active'];
+    }
     
 
 }
