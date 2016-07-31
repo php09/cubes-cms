@@ -312,6 +312,75 @@ $('#rows-table').on('click', "[data-action='reset-password']", function(e) {
             $('#rows-table').DataTable().draw(false);
         });
     });
+    
+    
+    $('#enable-warning-dialog').on('submit', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var target = $(this).is('#enable-warning-dialog') ? $(this) : $(this).closest('#enable-warning-dialog');
+        
+        $.ajax({
+            url: "<?php echo $this->url(array('controller' => 'admin_users', 'action' => 'enable'), 'default', true)?>",
+            method: 'post',
+            data: {
+                task: 'enable',
+                id: target.find('[name = "id"]').val()
+            }
+            
+            
+        }).done( function(data) {
+            
+            if(data['status'] == 'ok') {
+                var messageBox = $('[data-container="message-box-success"] ').last().clone(true);
+                messageBox.find('[data-container="message-text"]').text(data['statusMessage']);
+                $('#system-messages-container').append(messageBox);
+            } else {
+                var messageBox = $('[data-container="message-box-error"]').last().clone(true);
+                messageBox.find('[data-container="message-text"]').text(data['statusMessage']);
+                $('#system-messages-container').append(messageBox);
+            }
+        }).fail( function() {
+            alert('Error: Server returned error.');
+        }).always( function (data) {
+            target.modal('hide');
+            $('#rows-table').DataTable().draw(false);
+        });
+    });
+
+    $('#reset-password-warning-dialog').on('submit', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var target = $(this).is('#reset-password-warning-dialog') ? $(this) : $(this).closest('#reset-password-warning-dialog');
+        
+        $.ajax({
+            url: "<?php echo $this->url(array('controller' => 'admin_users', 'action' => 'resetpassword'), 'default', true)?>",
+            method: 'post',
+            data: {
+                task: 'reset',
+                id: target.find('[name = "id"]').val()
+            }
+            
+            
+        }).done( function(data) {
+            
+            if(data['status'] == 'ok') {
+                var messageBox = $('[data-container="message-box-success"] ').last().clone(true);
+                messageBox.find('[data-container="message-text"]').text(data['statusMessage']);
+                $('#system-messages-container').append(messageBox);
+            } else {
+                var messageBox = $('[data-container="message-box-error"]').last().clone(true);
+                messageBox.find('[data-container="message-text"]').text(data['statusMessage']);
+                $('#system-messages-container').append(messageBox);
+            }
+        }).fail( function() {
+            alert('Error: Server returned error.');
+        }).always( function (data) {
+            target.modal('hide');
+            $('#rows-table').DataTable().draw(false);
+        });
+    });
 
 <?php $this->inlineScript()->captureEnd() ;?>
 </script>
