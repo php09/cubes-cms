@@ -26,7 +26,7 @@ $.ajax({
     }).done( function(data) {
         $('#content').append(data);
     }).fail( function() {
-        alert("Error while loading dashboard on path " . controllers[i]);
+        alert("Error while loading dashboard on path " + controllers[i]);
     });
 }
     
