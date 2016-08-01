@@ -57,6 +57,18 @@ class AboutusController extends Zend_Controller_Action
 		} 
 		
 		$member = $foundMembers[0];
+                
+                $memberSlug = $request->getParam('member_slug');
+                
+                if(empty($memberSlug)) {
+                    $redirector = $this->getHelper('Redirector');
+                    $redirector->setExit(true)
+                            ->gotoRoute(array(
+                                'id' => $member['id'],
+                                'member_slug' => $member['first_name'] . '-' . $member['last_name']
+                                    ), 'member-route', true);
+                }
+                
 		
 		//Fetching all other members
 		$select = $cmsMembersDbTable->select();

@@ -69,7 +69,7 @@ $this->headTitle('Member - ' . $member['first_name'] . ' ' . $member['last_name'
 									?>
 									<li class="col-sm-6 col-md-3">
 										<a 
-											href="<?php echo $memberUrl;?>"
+											href="<?php echo $this->MemberUrl($member) ;?>"
 										>
 											<img alt="<?php echo $this->escape($member['first_name']);?>" class="img-polaroid" src="<?php echo $this->memberImgUrl($member);?>">
 										</a>
