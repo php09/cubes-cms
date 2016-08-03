@@ -16,15 +16,20 @@ class Admin_MembersController extends Zend_Controller_Action
 		
 		$cmsMembersDbTable = new Application_Model_DbTable_CmsMembers();
 		
-		// $select je objekat klase Zend_Db_Select
-		$select = $cmsMembersDbTable->select();
-		
-		$select->order('order_number');
-		
-		//degug za db select - vraca se sql upit
-		//die($select->assemble());
-		
-		$members = $cmsMembersDbTable->fetchAll($select);
+                $members = $cmsMembersDbTable->search( array(
+//                    'filters' => array(
+//                        //'status' => Application_Model_DbTable_CmsMembers::STATUS_DISABLED
+//                        //'first_name' => 'Aleksandar'
+//                        //'work_title' => 'PHP Developer'
+////                        'first_name_search' => 'ale'
+//                        'id' => array(1,3,5,7)
+//                    ),
+                    'orders' => array(
+                        'order_number' => 'ASC'
+                        ) /*,
+                    'limit' => 4,
+                    'page' => 1 */
+                ) );
 		
 		$this->view->members = $members;
 		$this->view->systemMessages = $systemMessages;
@@ -497,8 +502,9 @@ class Admin_MembersController extends Zend_Controller_Action
             }
             
             $cmsMembersDbTable = new Application_Model_DbTable_CmsMembers();
-            $totalMembers = $cmsMembersDbTable->totalNumberOfMembers();
-            $activeMembers = $cmsMembersDbTable->numberOfActiveMembers();
+//            $totalMembers = $cmsMembersDbTable->totalNumberOfMembers(); //old domaci, ovako nije trebalo!
+            $totalMembers = $cmsMembersDbTable->count();
+            $activeMembers = $cmsMembersDbTable->count( array( 'status' => Application_Model_DbTable_CmsMembers::STATUS_ENABLED) );
             
             $this->view->totalMembers = $totalMembers;
             $this->view->activeMembers = $activeMembers;
