@@ -12,9 +12,8 @@ class Admin_ClientsController extends Zend_Controller_Action
         );
 		
         $cmsClientsDbTable = new Application_Model_DbTable_CmsClients();
-        $select = $cmsClientsDbTable->select();
-        $select->order('order_number');
-        $clients = $cmsClientsDbTable->fetchAll($select);
+        
+        $clients = $cmsClientsDbTable->search(array('orders' => array('order_number' => 'ASC')));
 		
         $this->view->clients = $clients;
         $this->view->systemMessages = $systemMessages;

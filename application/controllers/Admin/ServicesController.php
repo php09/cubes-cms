@@ -10,9 +10,9 @@ class Admin_ServicesController extends Zend_Controller_Action
             'errors' => $flashMessenger->getMessages('errors')
         );
         $cmsServicesDbTable = new Application_Model_DbTable_CmsServices();
-        $select = $cmsServicesDbTable->select();
-        $select->order('order_number');
-        $services = $cmsServicesDbTable->fetchAll($select);
+        
+        $services = $cmsServicesDbTable->search(array('orders' => array('order_number' => 'ASC')));
+        
         $this->view->services = $services;
         $this->view->systemMessages = $systemMessages;
     }
