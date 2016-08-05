@@ -362,8 +362,8 @@ class Admin_ServicesController extends Zend_Controller_Action
         }
 
         $cmsServicesDbTable = new Application_Model_DbTable_CmsServices();
-        $totalServices = $cmsServicesDbTable->totalNumberOfServices();
-        $activeServices = $cmsServicesDbTable->numberOfActiveServices();
+        $totalServices = $cmsServicesDbTable->count();
+        $activeServices = $cmsServicesDbTable->count(array('status' => Application_Model_DbTable_CmsServices::STATUS_ENABLED));
 
         $this->view->totalServices = $totalServices;
         $this->view->activeServices = $activeServices;

@@ -255,16 +255,16 @@ class Application_Model_DbTable_CmsUsers extends Zend_Db_Table_Abstract
             }
     }
     
-    public function totalNumberOfUsers() {
-        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as total'));
-        $total = $this->fetchRow($select);
-        return $total['total'];
-    }
-    
-    public function numberOfActiveUsers() {
-        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as active'))->where('status = ' . self::STATUS_ENABLED);
-        $active = $this->fetchRow($select);
-        return $active['active'];
-    }
+//    public function totalNumberOfUsers() {
+//        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as total'));
+//        $total = $this->fetchRow($select);
+//        return $total['total'];
+//    }
+//    
+//    public function numberOfActiveUsers() {
+//        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as active'))->where('status = ' . self::STATUS_ENABLED);
+//        $active = $this->fetchRow($select);
+//        return $active['active'];
+//    }
     
 }

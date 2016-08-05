@@ -306,8 +306,8 @@ class Admin_ClientsController extends Zend_Controller_Action
             }
             
             $cmsClientsDbTable = new Application_Model_DbTable_CmsClients();
-            $totalClients = $cmsClientsDbTable->totalNumberOfClients();
-            $activeClients = $cmsClientsDbTable->numberOfActiveClients();
+            $totalClients = $cmsClientsDbTable->count();
+            $activeClients = $cmsClientsDbTable->count( array('status' => Application_Model_DbTable_CmsClients::STATUS_ENABLED));
             
             $this->view->totalClients = $totalClients;
             $this->view->activeClients = $activeClients;

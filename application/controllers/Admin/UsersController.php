@@ -604,8 +604,8 @@ class Admin_UsersController extends Zend_Controller_Action
             }
             
             $cmsUsersTable = new Application_Model_DbTable_CmsUsers();
-            $totalUsers = $cmsUsersTable->totalNumberOfUsers();
-            $activeUsers = $cmsUsersTable->numberOfActiveUsers();
+            $totalUsers = $cmsUsersTable->count();
+            $activeUsers = $cmsUsersTable->count(array('status' => Application_Model_DbTable_CmsUsers::STATUS_ENABLED));
             
             $this->view->totalUsers = $totalUsers;
             $this->view->activeUsers = $activeUsers;

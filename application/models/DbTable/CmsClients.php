@@ -90,16 +90,156 @@ class Application_Model_DbTable_CmsClients extends Zend_Db_Table_Abstract
         }
     }
  
-    public function totalNumberOfClients() {
-        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as total'));
-        $total = $this->fetchRow($select);
-        return $total['total'];
+//    public function totalNumberOfClients() {
+//        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as total'));
+//        $total = $this->fetchRow($select);
+//        return $total['total'];
+//    }
+//    
+//    public function numberOfActiveClients() {
+//        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as active'))->where('status = ' . self::STATUS_ENABLED);
+//        $active = $this->fetchRow($select);
+//        return $active['active'];
+//    }
+ 
+    /**
+     * Array parameters is keeping search parameters
+     * Array parameters must be  in following format:
+     *      array(
+     *          "filters" => array(
+     *                  "status" => 1,
+     *                  "id= => array(3, 8 ,11),
+     *                  "orders" => array(
+     *                                  "username" => ASC, 
+     *                                  "lastname" => DESC,
+     *                                   ),
+     *                  "limit" => 50, //limit result set to 50 rows
+     *                  "page" => 3 //start from page 3, if no limit is set, page is ignored
+     *                  )
+     * @param array $parameters Associative array with keys filters, orders, limit and page
+     */
+    public function search(array $parameters = array() ) {
+        $select = $this->select();
+        
+        if(isset($parameters['filters'])) {
+            $filters = $parameters['filters'];
+            
+            $this->processFilters($filters, $select);
+            
+            
+        }
+        
+        if(isset($parameters['orders'])) {
+            $orders = $parameters['orders'];
+            
+            foreach($orders AS $field => $orderDirection) {
+                
+                switch($field) {
+                    case 'id':
+                    case 'first_name':
+                    case 'last_name':
+                    case 'email':
+                    case 'status':
+                    case 'order_number':
+                    case 'work_title':
+                         if($orderDirection === 'DESC') {
+                             $select->order($field . ' DESC ');
+                         } else {
+                             $select->order($field);
+                         }
+                        break;
+                }
+                
+            }
+            
+        }
+        
+        if(isset($parameters['limit'])) {
+            
+            if(isset($parameters['page'])) {
+                //pagination is set, do limit by page
+                $select->limitPage($parameters['page'], $parameters['limit']);
+            } else {
+                //page is not set, just do regular
+                $select->limit($parameters['limit']);
+            }
+            
+        }
+        return $this->fetchAll($select)->toArray();
     }
     
-    public function numberOfActiveClients() {
-        $select = $this->select()->from($this, new Zend_Db_Expr('COUNT(id) as active'))->where('status = ' . self::STATUS_ENABLED);
-        $active = $this->fetchRow($select);
-        return $active['active'];
+    /**
+     * 
+     * @param array $filters see function search $parameters['fields']
+     * @return int Count of rows that match $filters
+     */
+    public function count( array $filters = array()) {
+        $select = $this->select();
+        
+        $this->processFilters($filters, $select);
+        
+        $select->reset('columns');
+        $select->from( $this->_name, 'COUNT(*) AS total');
+        
+        $row = $this->fetchRow($select)->total;
+        
+        return $row;
     }
+    
+    
+    /**
+     * fill $select object with WHERE conditions
+     * @param array $filters
+     * @param Zend_Db_Select $select
+     */
+    protected function processFilters(array $filters = array(), Zend_Db_Select $select) {
+    
+        //selected object will be modified outside this function
+        //objects are always passed by reference
+        
+        foreach($filters as $field => $value) {
+                
+//                if($field == 'id') {
+//                    if(is_array($value)) {
+//                        $select->where('id IN ( ? )', $value);
+//                    } else {
+//                        $select->where('id = ?', $value);
+//                    }
+//                }
+                
+                
+                switch($field) {
+                    case 'id':
+                    case 'first_name':
+                    case 'last_name':
+                    case 'email':
+                    case 'status':
+                    case 'work_title':
+                        if(is_array($value)) {
+                            $select->where( $field . ' IN (?) ', $value);
+                        } else {
+                            $select->where( $field . ' = ? ' , $value);
+                        }
+                        break;
+                    case 'first_name_search':
+                        $select->where('first_name LIKE ?', '%' . $value . '%');
+                        break;
+                    case 'last_name_search':
+                        $select->where('last_name LIKE ?', '%' . $value . '%');
+                        break;
+                    case 'email_search':
+                        $select->where('email LIKE ?', '%' . $value . '%');
+                        break;
+                    case 'id_exclude':
+                        if(is_array($value)) {
+                            $select->where('id NOT IN (?)', $value);
+                        } else {
+                            $select->where('id != ?', $value);
+                        }
+                        break;
+                }
+            }
+    }
+    
     
 }

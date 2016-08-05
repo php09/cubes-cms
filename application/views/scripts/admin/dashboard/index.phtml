@@ -4,7 +4,12 @@
     </div>
     <!-- /.col-lg-12 -->
 </div>
-<div id="content" class="row">
+<div class="row">
+    <div id="clients" class="col-lg-4 col-md-6"></div>
+    <div id="services" class="col-lg-4 col-md-6"></div>
+    <div id="members" class="col-lg-4 col-md-6"></div>
+    <div id="users" class="col-lg-4 col-md-6"></div>
+    
 </div>
 
 
@@ -14,7 +19,7 @@
     $.ajax({
         url: '<?php echo $this->url(array('controller' => 'admin_clients', 'action' => 'dashboard'), 'default', true)?>'
     }).done( function(data) {
-        $('#content').append(data);
+        $('#clients').html(data);
     }).fail( function() {
         alert("Error while loading dashboard clients.");
     });
@@ -22,7 +27,7 @@
     $.ajax({
         url: '<?php echo $this->url(array('controller' => 'admin_members', 'action' => 'dashboard'), 'default', true)?>'
     }).done( function(data) {
-        $('#content').append(data);
+        $('#members').html(data);
     }).fail( function() {
         alert("Error while loading dashboard members.");
     });
@@ -30,7 +35,7 @@
     $.ajax({
         url: '<?php echo $this->url(array('controller' => 'admin_services', 'action' => 'dashboard'), 'default', true)?>',
     }).done( function(data) {
-        $('#content').append(data);
+        $('#services').html(data);
     }).fail( function() {
         alert("Error while loading dashboard services.");
     });
@@ -38,7 +43,7 @@
     $.ajax({
         url: '<?php echo $this->url(array('controller' => 'admin_users', 'action' => 'dashboard'), 'default', true)?>'
     }).done( function(data) {
-        $('#content').append(data);
+        $('#users').html(data);
     }).fail( function() {
         alert("Error while loading dashboard users");
     });
