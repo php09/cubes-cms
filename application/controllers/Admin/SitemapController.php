@@ -22,13 +22,17 @@ class Admin_SitemapController extends Zend_Controller_Action
             throw new Zend_Controller_Router_Exception('Invalid parent id for sitemap pages.', 404);
         }
         
+        
         $cmsSitemapPages = new Application_Model_DbTable_CmsSitemapPages();
         
-        $sitemapPage = $cmsSitemapPages->getSitemapPageById($id);
+        if($id !=0) {
+            $sitemapPage = $cmsSitemapPages->getSitemapPageById($id);
         
-        if( !$sitemapPage && $id != 0) {
-            throw new Zend_Controller_Router_Exception('No sitemap page is found for sitemap pages.', 404);
+            if( !$sitemapPage) {
+                throw new Zend_Controller_Router_Exception('No sitemap page is found for sitemap pages.', 404);
+            }
         }
+        
         
         $childSitemapPages = $cmsSitemapPages->search(
                 array(
@@ -43,6 +47,216 @@ class Admin_SitemapController extends Zend_Controller_Action
         
         $this->view->sitemapPages = $childSitemapPages;
         $this->view->sitemapPagesBreadcrumbs = $sitemapPagesBreadcrumbs;
+        $this->view->currentSitemapPageId = $id;
     }
+    
+    
+    public function addAction() {
+        
+
+        $request = $this->getRequest();
+        
+        $parentId = (int) $request->getParam('parent_id', 0);
+        
+        if($parentId < 0) {
+            throw new Zend_Controller_Router_Exception('Invalid parent id for sitemap pages.', 404);
+        }
+        
+        $cmsSitemapPages = new Application_Model_DbTable_CmsSitemapPages();
+
+        if($parentId != 0) {
+            $parentSitemapPage = $cmsSitemapPages->getSitemapPageById($parentId);
+            
+            if(!$parentSitemapPage) {
+              throw new Zend_Controller_Router_Exception('No sitemap page is found for id: ' . $parentId, 404);
+            }
+        }
+        
+        
+        
+        $flashMessenger = $this->getHelper('FlashMessenger');
+
+        $systemMessages = array(
+                'success' => $flashMessenger->getMessages('success'),
+                'errors' => $flashMessenger->getMessages('errors'),
+        );
+
+        $form = new Application_Form_Admin_SitemapPageAdd($parentId);
+
+        //default form data
+        $form->populate(array(
+
+        ));
+
+        if ($request->isPost() && $request->getPost('task') === 'save') { 
+
+                try {
+
+                        //check form is valid
+                        if (!$form->isValid($request->getPost())) { 
+                                throw new Application_Model_Exception_InvalidInput('Invalid data was sent for new sitemapPage');
+                        }
+                        //ukoliko je validna forma
+                        //get form data
+                        $formData = $form->getValues(); //filtrirani i validirani podaci
+
+//                        unset($formData['sitemap_page_photo']); //posto baca gresku jer u bazi ne postoji polje sitemap_page_photo zato ga brisemo
+
+                        //inserujemo novi zapis instanciramo klasi
+                        $formData['parent_id'] = $parentId;
+                        
+                        $sitemapPageId = $cmsSitemapPages->insertSitemapPage($formData);
+
+//                        if( $form->getElement("sitemap_page_photo")->isUploaded() ) {
+//
+//                            $fileInfos = $form->getElement("sitemap_page_photo")->getFileInfo('sitemap_page_photo');
+//                            $fileInfo = $fileInfos["sitemap_page_photo"];
+//
+//                            try {
+//                                $sitemapPagePhoto = Intervention\Image\ImageManagerStatic::make($fileInfo["tmp_name"]);
+//                                $sitemapPagePhoto->fit(150, 150);
+//                                $sitemapPagePhoto->save(PUBLIC_PATH . '/uploads/sitemapPages/' . $sitemapPageId . '.jpg'); //na osnovu ovde navedene ekstenzije automatski i konvertuje u taj format
+//                            } catch (Exception $ex) {
+//
+//                                $flashMessenger->addMessage('SitemapPage has been saved but error occured during image processing.', 'errors');
+//
+//                                $redirector = $this->getHelper('Redirector');
+//                                $redirector->setExit(true)
+//                                        ->gotoRoute(array(
+//                                                'controller' => 'admin_sitemapPages',
+//                                                'action' => 'edit',
+//                                                'id' => $sitemapPageId
+//                                                            ), 'default', true);
+//
+//                            }
+//
+//
+//                        }
+
+                        // do actual task
+                        //save to database etc
+
+
+                        //set system message
+                        $flashMessenger->addMessage('SitemapPage has been saved', 'success');
+
+                        //redirect to same or another page po nasoj ideji bacamo na stranicu gde su svi sitemapPagei
+                        $redirector = $this->getHelper('Redirector');
+                        $redirector->setExit(true)
+                                ->gotoRoute(array(
+                                        'controller' => 'admin_sitemap',
+                                        'action' => 'index',
+                                        'id' => $parentId
+                                                    ), 'default', true);
+                } catch (Application_Model_Exception_InvalidInput $ex) {
+                        $systemMessages['errors'][] = $ex->getMessage();
+                }
+        }
+
+        $sitemapPagesBreadcrumbs = $cmsSitemapPages->getSitemapPageBreadcrumbs($parentId);
+        
+        $this->view->systemMessages = $systemMessages;
+        $this->view->form = $form;
+        $this->view->parentId = $parentId;
+        $this->view->sitemapPagesBreadcrumbs = $sitemapPagesBreadcrumbs;
+        
+    }
+    
+    public function editAction() {
+            
+            $request = $this->getRequest();
+            
+            $id = (int) $request->getParam("id");
+            
+            if($id <= 0) {
+                //prekida se izvrsavanje i prikazuje se page not found
+                throw new Zend_Controller_Router_Exception('Invalid sitemapPage id: ' . $id , 404);
+            }
+            
+            $cmsSitemapPages = new Application_Model_DbTable_CmsSitemapPages;
+            
+            $sitemapPage = $cmsSitemapPages->getSitemapPageById($id);
+            
+            if( empty($sitemapPage) ) {
+                throw new Zend_Controller_Router_Exception('No sitemapPage is found with id: ' . $id , 404);
+            }
+            
+            $this->view->sitemapPage = $sitemapPage;
+            
+            $flashMessenger = $this->getHelper('FlashMessenger');
+		
+		$systemMessages = array(
+			'success' => $flashMessenger->getMessages('success'),
+			'errors' => $flashMessenger->getMessages('errors'),
+		);
+		
+		$form = new Application_Form_Admin_SitemapPageEdit($sitemapPage['id'], $sitemapPage['parent_id']);
+               
+		//default form data
+		$form->populate( $sitemapPage );
+
+		if ($request->isPost() && $request->getPost('task') === 'update') { 
+                    
+			try {
+
+				//check form is valid
+				if (!$form->isValid($request->getPost())) { 
+					throw new Application_Model_Exception_InvalidInput('Invalid data was sent for sitemapPage');
+				}
+                                //ukoliko je validna forma
+				//get form data
+				$formData = $form->getValues(); //filtrirani i validirani podaci
+                                
+//                                unset($formData['sitemapPage_photo']); //posto baca gresku jer u bazi ne postoji polje sitemapPage_photo zato ga brisemo
+                                
+//                                if( $form->getElement("sitemapPage_photo")->isUploaded() ) {
+//                                
+//                                    $fileInfos = $form->getElement("sitemapPage_photo")->getFileInfo('sitemapPage_photo');
+//                                    $fileInfo = $fileInfos["sitemapPage_photo"];
+//                                    
+//                                    try {
+//                                        $sitemapPagePhoto = Intervention\Image\ImageManagerStatic::make($fileInfo["tmp_name"]);
+//                                        $sitemapPagePhoto->fit(150, 150);
+//                                        $sitemapPagePhoto->save(PUBLIC_PATH . '/uploads/sitemapPages/' . $sitemapPage['id'] . '.jpg'); //na osnovu ovde navedene ekstenzije automatski i konvertuje u taj format
+//                                    } catch (Exception $ex) {
+//                                        
+//                                        throw new Application_Model_Exception_InvalidInput('Error occured during image processing.');
+//                                        
+//                                    }
+//                                    
+//                                }
+                                
+                                
+                                //radimo update postojeceg zapisa u tabeli
+                                $cmsSitemapPages->updateSitemapPage( $sitemapPage['id'], $formData);
+                                
+
+				// do actual task
+				//save to database etc
+				
+				
+				//set system message
+				$flashMessenger->addMessage('SitemapPage has been updated', 'success');
+
+				//redirect to same or another page po nasoj ideji bacamo na stranicu gde su svi sitemapPagei
+				$redirector = $this->getHelper('Redirector');
+				$redirector->setExit(true)
+					->gotoRoute(array(
+						'controller' => 'admin_sitemap',
+						'action' => 'index',
+                                                'id' => $sitemapPage['parent_id']
+                                                            ), 'default', true);
+			} catch (Application_Model_Exception_InvalidInput $ex) {
+				$systemMessages['errors'][] = $ex->getMessage();
+			}
+		}
+
+                $sitemapPagesBreadcrumbs = $cmsSitemapPages->getSitemapPageBreadcrumbs($sitemapPage['parent_id']);
+                
+		$this->view->systemMessages = $systemMessages;
+		$this->view->form = $form;
+                $this->view->sitemapPagesBreadcrumbs = $sitemapPagesBreadcrumbs;
+            
+        }
     
 }

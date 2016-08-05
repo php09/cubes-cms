@@ -136,12 +136,9 @@ class Application_Model_DbTable_CmsClients extends Zend_Db_Table_Abstract
                 
                 switch($field) {
                     case 'id':
-                    case 'first_name':
-                    case 'last_name':
-                    case 'email':
+                    case 'name':
                     case 'status':
                     case 'order_number':
-                    case 'work_title':
                          if($orderDirection === 'DESC') {
                              $select->order($field . ' DESC ');
                          } else {
@@ -210,32 +207,17 @@ class Application_Model_DbTable_CmsClients extends Zend_Db_Table_Abstract
                 
                 switch($field) {
                     case 'id':
-                    case 'first_name':
-                    case 'last_name':
-                    case 'email':
+                    case 'name':
                     case 'status':
-                    case 'work_title':
+                    case 'order_number':
                         if(is_array($value)) {
                             $select->where( $field . ' IN (?) ', $value);
                         } else {
                             $select->where( $field . ' = ? ' , $value);
                         }
                         break;
-                    case 'first_name_search':
+                    case 'name_search':
                         $select->where('first_name LIKE ?', '%' . $value . '%');
-                        break;
-                    case 'last_name_search':
-                        $select->where('last_name LIKE ?', '%' . $value . '%');
-                        break;
-                    case 'email_search':
-                        $select->where('email LIKE ?', '%' . $value . '%');
-                        break;
-                    case 'id_exclude':
-                        if(is_array($value)) {
-                            $select->where('id NOT IN (?)', $value);
-                        } else {
-                            $select->where('id != ?', $value);
-                        }
                         break;
                 }
             }
