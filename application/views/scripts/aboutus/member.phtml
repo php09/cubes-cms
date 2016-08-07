@@ -39,6 +39,7 @@ $this->headTitle('Member - ' . $member['first_name'] . ' ' . $member['last_name'
 									<a data-original-title="Facebook" data-placement="top" class="_tooltip" href="#"><i class="fa fa-facebook"></i></a>
 									<a data-original-title="LinkedIn" data-placement="top" class="_tooltip" href="#"><i class="fa fa-linkedin"></i></a>
 									<a data-original-title="Google +" data-placement="top" class="_tooltip" href="#"><i class="fa fa-google-plus"></i></a>
+                                                                        <a data-original-title="Askmember +" data-placement="top" class="_tooltip" href="<?php echo $this->url( array( 'controller' => 'contact', 'action' => 'askmember', 'id' => $this->member['id'], 'member_slug' => $this->member['first_name'] . '-' . $this->member['last_name']), 'ask-member', true) ;?>"><i class="fa fa-envelope-o"></i></a>
 								</div>
 							</div>
 						</div>
@@ -66,6 +67,8 @@ $this->headTitle('Member - ' . $member['first_name'] . ' ' . $member['last_name'
 										$memberCount ++;
 										
 										$memberUrl = $this->baseUrl('/aboutus/member/id/' . $member['id']);
+                                                                                
+                                                                                $memberUrl = $this->memberUrl($member);
 									?>
 									<li class="col-sm-6 col-md-3">
 										<a 

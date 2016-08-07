@@ -56,6 +56,7 @@ $this->headTitle('About Us');
 										
 										$memberCount ++;
 										$memberImgUrl = $this->memberImgUrl($member);
+                                                                                $memberUrl = $this->memberUrl($member);
                                                                                 
 									?>
 									<li class="col-sm-6 col-md-3">
@@ -85,7 +86,7 @@ $this->headTitle('About Us');
 						<div class="inner">
 							<div class="block mdrs">
 								<a class="btn btn-block btn-info" href="#"><i class="fa fa-download"></i> Download Our Press Kit</a>
-								<a class="btn btn-block btn-success" href="<?php echo $this->baseUrl('/contact');?>"><i class="fa fa-envelope-o"></i> Get In Touch</a>
+								<a class="btn btn-block btn-success" href="<?php echo $this->baseUrl('/contact-us');?>"><i class="fa fa-envelope-o"></i> Get In Touch</a>
 							</div>
 						</div>
 					</div>

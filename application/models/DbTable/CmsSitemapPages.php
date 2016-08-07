@@ -82,19 +82,50 @@ class Application_Model_DbTable_CmsSitemapPages extends Zend_Db_Table_Abstract
     
 
     
-    /**
+//    /**
+//     * 
+//     * @param int $id Id of the sitemapPage to delete
+//     */
+//    public function deleteSitemapPage($id) {
+//        $sitemapPage = $this->getSitemapPageById($id);
+//        
+//        $this->update( array(
+//            'order_number' => new Zend_Db_Expr('order_number - 1') 
+//            ), 'order_number' > $sitemapPage['order_number'] . ' AND parent_id = ' . $sitemapPage['parent_id']);
+//        
+//        $this->delete('id = ' . $id);
+//    }
+    
+        /**
      * 
      * @param int $id Id of the sitemapPage to delete
      */
-    public function deleteSitemapPage($id) {
+    public function deleteSitemapPage($id, $pozvanoVisePuta = FALSE) {
         $sitemapPage = $this->getSitemapPageById($id);
+       
+//        $select = $this->select();
+//        $select->where('parent_id = ?', $sitemapPage['id']);
+//        $result = $this->fetchAll($select)->toArray();
         
-        $this->update( array(
-            'order_number' => new Zend_Db_Expr('order_number - 1') 
-            ), 'order_number' > $sitemapPage['order_number'] . ' AND parent_id = ' . $sitemapPage['parent_id']);
+        $result = $this->search(array('filters' => array('parent_id' => $id)));
         
-        $this->delete('id = ' . $id);
+        if($pozvanoVisePuta === FALSE) {
+            $this->update( 
+                    array(
+                        'order_number' => new Zend_Db_Expr('order_number - 1')
+                        ), 'parent_id = ' . $sitemapPage['parent_id'] . ' AND order_number > ' . $sitemapPage['order_number']
+                    );
+        }
+        
+        if( !empty($result) ) {
+            foreach($result as $page) {
+                $this->deleteSitemapPage($page['id'], TRUE);
+                
+            }
+        }
+        $this->delete('id = ' . $sitemapPage['id']);
     }
+    
     
     /**
      * 

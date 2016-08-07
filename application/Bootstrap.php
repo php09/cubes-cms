@@ -25,6 +25,25 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                                 'action' => 'member',
                                 'member_slug' => ''
                             )
+                        ))
+                ->addRoute(
+                        'contact-us',
+                        new Zend_Controller_Router_Route_Static(
+                                'contact-us',
+                                array(
+                                    'controller' => 'contact',
+                                    'action' => 'index'
+                                )
+                            )
+                        )
+                ->addRoute( 'ask-member',
+                        new Zend_Controller_Router_Route(
+                            'contact-us/ask-member/:id/:member_slug',
+                            array(
+                                'controller' => 'contact',
+                                'action' => 'askmember',
+                                'member_slug' => ''
+                            )
                         ));
         
     }
