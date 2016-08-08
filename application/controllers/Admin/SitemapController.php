@@ -521,7 +521,11 @@ class Admin_SitemapController extends Zend_Controller_Action
             
             
             try {
-                $currentBreadcrumb = $request->getPost('breadcrumb_id');
+                $currentBreadcrumb = (int) $request->getPost('breadcrumb_id');
+                
+                if($currentBreadcrumb < 0) {
+                    $currentBreadcrumb = 0;
+                }
                 
                 $sortedIds = $request->getPost('sorted_ids');
                 
