@@ -6,6 +6,48 @@ class Application_Model_DbTable_CmsSitemapPages extends Zend_Db_Table_Abstract
     
     protected $_name = 'cms_sitemap_pages';
     
+    protected static $sitemapPagesMap;
+    
+    /**
+     * 
+     * @return array with keys as sitemap page ids and values as associative array with keys url and type
+     */
+    public static function getSitemapPagesMap() { //primer lazy loading metoda
+        
+        if( !self::$sitemapPagesMap ) {
+            
+            $sitemapPagesMap = array();
+
+            $cmsSitemapPagesDbTable = new self(); // self == Application_Model_DbTable_CmsSitemapPages();
+
+            $sitemapPages = $cmsSitemapPagesDbTable->search( 
+                    array(
+                        'orders' => array(
+                            'parent_id' => 'ASC', 'order_number' => 'ASC'
+                            )
+                        )
+                    );
+
+            foreach($sitemapPages as $sitemapPage) {
+                $type = $sitemapPage['type'];
+                $url = $sitemapPage['url_slug'];
+
+                if(isset($sitemapPagesMap[$sitemapPage['parent_id']])) {
+                    $url = $sitemapPagesMap[$sitemapPage['parent_id']]['url'] . '/' . $url;
+                }
+                
+                $sitemapPagesMap[$sitemapPage['id']] = array('url' => $url, 'type' => $type);
+            }
+            
+            
+                    
+            self::$sitemapPagesMap = $sitemapPagesMap;
+        }
+        
+        return self::$sitemapPagesMap;
+        
+    }
+    
     /**
      * @param int $id
      * @return null/array Associative array with keys as cms_sitemap_pages table columns or returns null
@@ -117,12 +159,11 @@ class Application_Model_DbTable_CmsSitemapPages extends Zend_Db_Table_Abstract
                     );
         }
         
-        if( !empty($result) ) {
+//        if( !empty($result) ) {
             foreach($result as $page) {
                 $this->deleteSitemapPage($page['id'], TRUE);
-                
             }
-        }
+//        }
         $this->delete('id = ' . $sitemapPage['id']);
     }
     
