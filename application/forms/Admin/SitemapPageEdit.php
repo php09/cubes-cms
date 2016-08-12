@@ -5,15 +5,30 @@ class Application_Form_Admin_SitemapPageEdit extends Zend_Form
     
     protected $parentId;
     protected $sitemapPageId;
+    protected $parentType;
     
-    public function __construct($sitemapPageId, $parentId, $options = null) {
+    public function __construct($sitemapPageId, $parentId, $parentType, $options = null) {
         $this->parentId = $parentId;
         $this->sitemapPageId = $sitemapPageId;
+        $this->parentType = $parentType;
         parent::__construct($options);
     }
 
     
     public function init() {
+        
+        $sitemapPageTypes = Zend_Registry::get("sitemapPageTypes");
+        $rootSitemapPages = Zend_Registry::get('rootSitemapPageTypes');
+        
+        if($this->parentId == 0) {
+            $parentSubtypes = $rootSitemapPages;
+        } else {
+            $parentSubtypes = $sitemapPageTypes[$this->parentType]['subtypes'];
+        }
+        
+        $cmsSitemapPagesDbTable = new Application_Model_DbTable_CmsSitemapPages();
+        
+        $parentSubtypesCount = $cmsSitemapPagesDbTable->countByTypes(array('parent_id' => $this->parentId, 'id_exclude' => $this->sitemapPageId));
         
         /*
          * type
@@ -36,12 +51,27 @@ class Application_Form_Admin_SitemapPageEdit extends Zend_Form
 //            '' => '-- select type --'  // ovo nece raditi
 //        ));
         $type->addMultiOption('', '-- Select Sitemap Page Type --')
-                ->addMultiOptions(array(
-                    'StaticPage' => 'Static page',
-                    'AboutUsPage' => 'About us page',
-                    'ContactPage'=> 'Contact page'
-                ))
+//                ->addMultiOptions(array(
+//                    'StaticPage' => 'Static page',
+//                    'AboutUsPage' => 'About us page',
+//                    'ContactPage'=> 'Contact page'
+//                ))
                 ->setRequired(TRUE);
+        
+//        foreach($sitemapPageTypes as $sitemapPageType => $sitemapPageTypeProperties) {
+//            $type->addMultiOption($sitemapPageType, $sitemapPageTypeProperties['title']);
+//        }
+        foreach($parentSubtypes as $sitemapPageType => $sitemapPageTypeMax) {
+            
+            $sitemapPageTypeProperties = $sitemapPageTypes[$sitemapPageType];
+            
+            $totalExistingSitemapPagesType = isset($parentSubtypesCount[$sitemapPageType]) ? $parentSubtypesCount[$sitemapPageType] : 0 ;
+            
+            if($sitemapPageTypeMax == 0 || $sitemapPageTypeMax > $totalExistingSitemapPagesType) {
+                $type->addMultiOption($sitemapPageType, $sitemapPageTypeProperties['title']);
+            }
+            
+        }
         
         $this->addElement($type);
         

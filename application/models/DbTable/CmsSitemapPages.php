@@ -365,4 +365,36 @@ class Application_Model_DbTable_CmsSitemapPages extends Zend_Db_Table_Abstract
     }
     
     
+    /**
+     * Returns count by type, example:
+     * array(
+     *  'StaticPage' => 1,
+     *  'AboutUsPage' => 2,
+     *  'ContactPage' => 1
+     * )
+     * @param type $filters
+     * @return array count by type
+     */
+    public function countByTypes($filters = array()) {
+        
+        $select = $this->select();
+        
+        $this->processFilters($filters, $select);
+        
+        $select->reset('columns');
+        $select->from( $this->_name, array('type', 'COUNT(*) as totalByType'))
+                ->group('type');
+        
+        $rows = $this->fetchAll($select);
+        
+        $countByTypes = array();
+        
+        foreach($rows AS $row) {
+            $countByTypes[$row['type']] = $row['totalByType'];
+        }
+        
+        return $countByTypes;
+        
+    }
+    
 }
