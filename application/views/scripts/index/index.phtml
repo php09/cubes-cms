@@ -1,8 +1,4 @@
-<?php 
-$slides = $this->slides;
-$services = $this->services;
-?>
-<!-- ======== @Region: #highlighted ======== -->
+		<!-- ======== @Region: #highlighted ======== -->
 		<div id="highlighted">
 			<!-- Flexslider - May use standard Bootstrap markup within slides - For best results use images all the same size (in this example they are 600px x 400px) -->
 			<!--Flexslider Showshow-->
@@ -10,28 +6,70 @@ $services = $this->services;
 				<div class="flexslider" id="index-slider">
 					<!--The Slides-->
 					<div class="slides">
-                                            <?php foreach($slides AS $slide) { ?>
 						<div class="slide">
 							<div class="row">
 								<div class="col-sm-6">
-									<img src="<?php echo $this->indexSlideImgUrl($slide) ;?>" alt="<?php echo $this->escape($slide['title']) ;?>" class="animated fadeInDownBig" />
+									<img src="/uploads/index-slides/1.jpg" alt="Slide 1 Title" class="animated fadeInDownBig" />
 								</div>
 								<div class="col-sm-6 caption animated fadeInUpBig">
 									<h2>
-										<?php echo $this->escape($slide['title']) ;?>
+										Slide 1 Title
 									</h2>
 									<p>
-										<?php echo $this->escape($slide['description']) ;?>
+										Slide 1 Description HTML
 									</p>
-                                                                        <?php if($slide['link_type'] != 'NoLink') { ?>
-                                                                        <a href="<?php echo $this->indexSlideLinkUrl($slide) ;?>" class="btn btn-lg btn-primary"><?php echo $this->escape($slide['link_label']) ;?></a>
-                                                                        <?php } ?>
+									<a href="#slide-1-link-url" class="btn btn-lg btn-primary">slide 1 link label</a>
 								</div>
 							</div>
 						</div>
-                                            <?php } ?>
-						
-                                            
+						<div class="slide">
+							<div class="row">
+								<div class="col-sm-6">
+									<img src="/uploads/index-slides/1.jpg" alt="Slide 1 Title" class="animated fadeInDownBig" />
+								</div>
+								<div class="col-sm-6 caption animated fadeInUpBig">
+									<h2>
+										Slide 1 Title
+									</h2>
+									<p>
+										Slide 1 Description HTML
+									</p>
+									<a href="#slide-1-link-url" class="btn btn-lg btn-primary">slide 1 link label</a>
+								</div>
+							</div>
+						</div>
+						<div class="slide">
+							<div class="row">
+								<div class="col-sm-6">
+									<img src="/uploads/index-slides/2.jpg" alt="Slide 2 Title" class="animated fadeInDownBig" />
+								</div>
+								<div class="col-sm-6 caption animated fadeInUpBig">
+									<h2>
+										Slide 2 Title
+									</h2>
+									<p>
+										Slide 2 Description HTML
+									</p>
+									<a href="#slide-2-link-url" class="btn btn-lg btn-primary">slide 2 link label</a>
+								</div>
+							</div>
+						</div>
+						<div class="slide">
+							<div class="row">
+								<div class="col-sm-6">
+									<img src="/uploads/index-slides/3.jpg" alt="Slide 3 Title" class="animated fadeInDownBig" />
+								</div>
+								<div class="col-sm-6 caption animated fadeInUpBig">
+									<h2>
+										Slide 3 Title
+									</h2>
+									<p>
+										Slide 3 Description HTML
+									</p>
+									<a href="#slide-3-link-url" class="btn btn-lg btn-primary">slide 3 link label</a>
+								</div>
+							</div>
+						</div>
 						
 					</div>
 				</div>
@@ -45,20 +83,33 @@ $services = $this->services;
 				<div class="block services margin-top-large">
 					<h2 class="block-title">
 						<span>Our Services</span> 
-                                                <?php if($this->servicesSitemapPage) { ?>
-						<small><a href="<?php echo $this->sitemapPageUrl($this->servicesSitemapPage['id']); ?>">View all</a></small>
-                                                <?php } ?>
+						<small><a href="/services">View all</a></small>
 					</h2>
-                                    <?php foreach($services AS $service) { ?>
 					<ul class="thumbnails row">
-                                            
 						<li class="col-sm-3">
 							<h3 class="title">
-								<i class="glyphicon glyphicon-wrench icon-small icon-inverse-80 _icon-circle"></i> <?php echo $this->escape($service['title']) ;?>
+								<i class="glyphicon glyphicon-wrench icon-small icon-inverse-80 _icon-circle"></i> Web
 							</h3>
-							<p><?php echo $this->escape($service['description']) ;?></p>
+							<p>Rhoncus adipiscing, magna integer cursus augue eros lacus porttitor magna. Dictumst, odio! Elementum tortor sociis in eu dis dictumst pulvinar lorem nec aliquam a nascetur.</p>
 						</li>
-                                    <?php } ?>
+						<li class="col-sm-3">
+							<h3 class="title">
+								<i class="glyphicon glyphicon-search icon-small icon-inverse-80 _icon-circle"></i> SEO
+							</h3>
+							<p>Rhoncus adipiscing, magna integer cursus augue eros lacus porttitor magna. Dictumst, odio! Elementum tortor sociis in eu dis dictumst pulvinar lorem nec aliquam a nascetur.</p>
+						</li>
+						<li class="col-sm-3">
+							<h3 class="title">
+								<i class="glyphicon glyphicon-pencil icon-small icon-inverse-80 _icon-circle"></i> Design
+							</h3>
+							<p>Rhoncus adipiscing, magna integer cursus augue eros lacus porttitor magna. Dictumst, odio! Elementum tortor sociis in eu dis dictumst pulvinar lorem nec aliquam a nascetur.</p>
+						</li>
+						<li class="col-sm-3">
+							<h3 class="title">
+								<i class="glyphicon glyphicon-shopping-cart icon-small icon-inverse-80 _icon-circle"></i> eCommerce
+							</h3>
+							<p>Rhoncus adipiscing, magna integer cursus augue eros lacus porttitor magna. Dictumst, odio! Elementum tortor sociis in eu dis dictumst pulvinar lorem nec aliquam a nascetur.</p>
+						</li>
 					</ul>
 				</div>
 				<!-- portfolio -->
@@ -127,8 +178,7 @@ $this->inlineScript()->appendFile($this->baseUrl('/plugins/flexslider/jquery.fle
 			controlNav: true,
 			smoothHeight: true,
 			animationLoop: true,
-			randomize: false,
-                        startAt: 1 //thx Djole!
+			randomize: false
 		});
 	<?php $this->inlineScript()->captureEnd();?>
 </script>
