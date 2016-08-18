@@ -1,4 +1,8 @@
-		<!-- ======== @Region: #highlighted ======== -->
+<?php 
+$slides = $this->slides;
+$services = $this->services;
+?>
+<!-- ======== @Region: #highlighted ======== -->
 		<div id="highlighted">
 			<!-- Flexslider - May use standard Bootstrap markup within slides - For best results use images all the same size (in this example they are 600px x 400px) -->
 			<!--Flexslider Showshow-->
@@ -6,70 +10,28 @@
 				<div class="flexslider" id="index-slider">
 					<!--The Slides-->
 					<div class="slides">
+                                            <?php foreach($slides AS $slide) { ?>
 						<div class="slide">
 							<div class="row">
 								<div class="col-sm-6">
-									<img src="/uploads/index-slides/1.jpg" alt="Slide 1 Title" class="animated fadeInDownBig" />
+									<img src="<?php echo $this->indexSlideImgUrl($slide) ;?>" alt="<?php echo $this->escape($slide['title']) ;?>" class="animated fadeInDownBig" />
 								</div>
 								<div class="col-sm-6 caption animated fadeInUpBig">
 									<h2>
-										Slide 1 Title
+										<?php echo $this->escape($slide['title']) ;?>
 									</h2>
 									<p>
-										Slide 1 Description HTML
+										<?php echo $this->escape($slide['description']) ;?>
 									</p>
-									<a href="#slide-1-link-url" class="btn btn-lg btn-primary">slide 1 link label</a>
+                                                                        <?php if($slide['link_type'] != 'NoLink') { ?>
+                                                                        <a href="<?php echo $this->indexSlideLinkUrl($slide) ;?>" class="btn btn-lg btn-primary"><?php echo $this->escape($slide['link_label']) ;?></a>
+                                                                        <?php } ?>
 								</div>
 							</div>
 						</div>
-						<div class="slide">
-							<div class="row">
-								<div class="col-sm-6">
-									<img src="/uploads/index-slides/1.jpg" alt="Slide 1 Title" class="animated fadeInDownBig" />
-								</div>
-								<div class="col-sm-6 caption animated fadeInUpBig">
-									<h2>
-										Slide 1 Title
-									</h2>
-									<p>
-										Slide 1 Description HTML
-									</p>
-									<a href="#slide-1-link-url" class="btn btn-lg btn-primary">slide 1 link label</a>
-								</div>
-							</div>
-						</div>
-						<div class="slide">
-							<div class="row">
-								<div class="col-sm-6">
-									<img src="/uploads/index-slides/2.jpg" alt="Slide 2 Title" class="animated fadeInDownBig" />
-								</div>
-								<div class="col-sm-6 caption animated fadeInUpBig">
-									<h2>
-										Slide 2 Title
-									</h2>
-									<p>
-										Slide 2 Description HTML
-									</p>
-									<a href="#slide-2-link-url" class="btn btn-lg btn-primary">slide 2 link label</a>
-								</div>
-							</div>
-						</div>
-						<div class="slide">
-							<div class="row">
-								<div class="col-sm-6">
-									<img src="/uploads/index-slides/3.jpg" alt="Slide 3 Title" class="animated fadeInDownBig" />
-								</div>
-								<div class="col-sm-6 caption animated fadeInUpBig">
-									<h2>
-										Slide 3 Title
-									</h2>
-									<p>
-										Slide 3 Description HTML
-									</p>
-									<a href="#slide-3-link-url" class="btn btn-lg btn-primary">slide 3 link label</a>
-								</div>
-							</div>
-						</div>
+                                            <?php } ?>
+						
+                                            
 						
 					</div>
 				</div>
@@ -83,33 +45,20 @@
 				<div class="block services margin-top-large">
 					<h2 class="block-title">
 						<span>Our Services</span> 
-						<small><a href="/services">View all</a></small>
+                                                <?php if($this->servicesSitemapPage) { ?>
+						<small><a href="<?php echo $this->sitemapPageUrl($this->servicesSitemapPage['id']); ?>">View all</a></small>
+                                                <?php } ?>
 					</h2>
+                                    <?php foreach($services AS $service) { ?>
 					<ul class="thumbnails row">
+                                            
 						<li class="col-sm-3">
 							<h3 class="title">
-								<i class="glyphicon glyphicon-wrench icon-small icon-inverse-80 _icon-circle"></i> Web
+								<i class="glyphicon glyphicon-wrench icon-small icon-inverse-80 _icon-circle"></i> <?php echo $this->escape($service['title']) ;?>
 							</h3>
-							<p>Rhoncus adipiscing, magna integer cursus augue eros lacus porttitor magna. Dictumst, odio! Elementum tortor sociis in eu dis dictumst pulvinar lorem nec aliquam a nascetur.</p>
+							<p><?php echo $this->escape($service['description']) ;?></p>
 						</li>
-						<li class="col-sm-3">
-							<h3 class="title">
-								<i class="glyphicon glyphicon-search icon-small icon-inverse-80 _icon-circle"></i> SEO
-							</h3>
-							<p>Rhoncus adipiscing, magna integer cursus augue eros lacus porttitor magna. Dictumst, odio! Elementum tortor sociis in eu dis dictumst pulvinar lorem nec aliquam a nascetur.</p>
-						</li>
-						<li class="col-sm-3">
-							<h3 class="title">
-								<i class="glyphicon glyphicon-pencil icon-small icon-inverse-80 _icon-circle"></i> Design
-							</h3>
-							<p>Rhoncus adipiscing, magna integer cursus augue eros lacus porttitor magna. Dictumst, odio! Elementum tortor sociis in eu dis dictumst pulvinar lorem nec aliquam a nascetur.</p>
-						</li>
-						<li class="col-sm-3">
-							<h3 class="title">
-								<i class="glyphicon glyphicon-shopping-cart icon-small icon-inverse-80 _icon-circle"></i> eCommerce
-							</h3>
-							<p>Rhoncus adipiscing, magna integer cursus augue eros lacus porttitor magna. Dictumst, odio! Elementum tortor sociis in eu dis dictumst pulvinar lorem nec aliquam a nascetur.</p>
-						</li>
+                                    <?php } ?>
 					</ul>
 				</div>
 				<!-- portfolio -->
@@ -178,7 +127,8 @@ $this->inlineScript()->appendFile($this->baseUrl('/plugins/flexslider/jquery.fle
 			controlNav: true,
 			smoothHeight: true,
 			animationLoop: true,
-			randomize: false
+			randomize: false,
+                        startAt: 1 //thx Djole!
 		});
 	<?php $this->inlineScript()->captureEnd();?>
 </script>
