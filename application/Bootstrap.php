@@ -25,6 +25,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'ContactPage' => array(
                 'title' => 'Contact page',
                 'subtypes' => array()
+            ),
+            'PhotoGalleriesPage' => array(
+                'title' => 'Photo gallery',
+                'subtypes' => array()
             )
         );
         
@@ -32,7 +36,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'StaticPage' => 0,
             'AboutUsPage' => 1,
             'ServicesPage' => 1,
-            'ContactPage' => 1
+            'ContactPage' => 1,
+            'PhotoGalleriesPage' => 1
         );
         
         Zend_Registry::set('sitemapPageTypes', $sitemapPageTypes);
@@ -161,6 +166,29 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                         )
                     )
                 );
+            }
+            
+            if($sitemapPageMap['type'] == 'PhotoGalleriesPage') {
+                
+                $router->addRoute('static-page-route-' . $sitemapPageId, new Zend_Controller_Router_Route_Static(
+					$sitemapPageMap['url'],
+					array(
+						'controller' => 'photogalleries',
+						'action' => 'index',
+						'sitemap_page_id' => $sitemapPageId
+					)
+				));
+				
+                $router->addRoute('photo-gallery-route', new Zend_Controller_Router_Route(
+                        $sitemapPageMap['url'] . '/:id/:photo_gallery_slug',
+                        array(
+                                'controller' => 'photogalleries',
+                                'action' => 'gallery',
+                                'sitemap_page_id' => $sitemapPageId
+                        )
+                ));
+                
+                
             }
                 
         }

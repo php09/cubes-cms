@@ -1,8 +1,4 @@
-<?php 
-$slides = $this->slides;
-$services = $this->services;
-?>
-<!-- ======== @Region: #highlighted ======== -->
+		<!-- ======== @Region: #highlighted ======== -->
 		<div id="highlighted">
 			<!-- Flexslider - May use standard Bootstrap markup within slides - For best results use images all the same size (in this example they are 600px x 400px) -->
 			<!--Flexslider Showshow-->
@@ -10,29 +6,26 @@ $services = $this->services;
 				<div class="flexslider" id="index-slider">
 					<!--The Slides-->
 					<div class="slides">
-                                            <?php foreach($slides AS $slide) { ?>
+						<?php foreach ($this->indexSlides as $indexSlide) {?>
 						<div class="slide">
 							<div class="row">
 								<div class="col-sm-6">
-									<img src="<?php echo $this->indexSlideImgUrl($slide) ;?>" alt="<?php echo $this->escape($slide['title']) ;?>" class="animated fadeInDownBig" />
+									<img src="<?php echo $this->indexSlideImgUrl($indexSlide);?>" alt="<?php echo $this->escape($indexSlide['title']);?>" class="animated fadeInDownBig" />
 								</div>
 								<div class="col-sm-6 caption animated fadeInUpBig">
 									<h2>
-										<?php echo $this->escape($slide['title']) ;?>
+										<?php echo $this->escape($indexSlide['title']);?>
 									</h2>
 									<p>
-										<?php echo $this->escape($slide['description']) ;?>
+										<?php echo $this->escape($indexSlide['description']);?>
 									</p>
-                                                                        <?php if($slide['link_type'] != 'NoLink') { ?>
-                                                                        <a href="<?php echo $this->indexSlideLinkUrl($slide) ;?>" class="btn btn-lg btn-primary"><?php echo $this->escape($slide['link_label']) ;?></a>
-                                                                        <?php } ?>
+									<?php if ($indexSlide['link_type'] != 'NoLink') {?>
+									<a href="<?php echo $this->indexSlideLinkUrl($indexSlide);?>" class="btn btn-lg btn-primary"><?php echo $this->escape($indexSlide['link_label']);?></a>
+									<?php }?>
 								</div>
 							</div>
 						</div>
-                                            <?php } ?>
-						
-                                            
-						
+						<?php }?>
 					</div>
 				</div>
 			</section>
@@ -44,73 +37,47 @@ $services = $this->services;
 				<!-- Services -->
 				<div class="block services margin-top-large">
 					<h2 class="block-title">
-						<span>Our Services</span> 
-                                                <?php if($this->servicesSitemapPage) { ?>
-						<small><a href="<?php echo $this->sitemapPageUrl($this->servicesSitemapPage['id']); ?>">View all</a></small>
-                                                <?php } ?>
+						<span>Our Services</span>
+						<?php if ($this->servicesSitemapPage) {?>
+						<small><a href="<?php echo $this->sitemapPageUrl($this->servicesSitemapPage['id']);?>">View all</a></small>
+						<?php }?>
 					</h2>
-                                    <?php foreach($services AS $service) { ?>
 					<ul class="thumbnails row">
-                                            
+						<?php foreach ($this->services as $service) {?>
 						<li class="col-sm-3">
 							<h3 class="title">
-								<i class="glyphicon glyphicon-wrench icon-small icon-inverse-80 _icon-circle"></i> <?php echo $this->escape($service['title']) ;?>
+								<i class="<?php echo $this->escape($service['icon']);?> icon-small icon-inverse-80 _icon-circle"></i> <?php echo $this->escape($service['title']);?>
 							</h3>
-							<p><?php echo $this->escape($service['description']) ;?></p>
+							<p><?php echo $this->escape($service['description']);?></p>
 						</li>
-                                    <?php } ?>
+						<?php }?>
 					</ul>
 				</div>
 				<!-- portfolio -->
 				<!-- Recommended screenshot size: 400px x 300px -->
 				<div class="block portfolio margin-top-large">
 					<h2 class="block-title">
-						<span>Photo galleries</span> 
-						<small><a href="#link-to-all-photo-galleries">View all</a></small>
+						<span>Photo galleries</span>
+						<?php if ($this->photoGalleriesSitemapPage) {?>
+						<small><a href="<?php echo $this->sitemapPageUrl($this->photoGalleriesSitemapPage['id']);?>">View all</a></small>
+						<?php }?>
 					</h2>
 					<ul class="thumbnails row projects">
+						<?php foreach ($this->photoGalleries as $photoGallery) {?>
 						<li class="col-md-4 ">
 							<div class="">
 								<div class="project">
-									<a class="lnk-polaroid" href="#link-to-photo-gallery-1">
-										<img src="/uploads/photo-galleries/1.jpg" alt="Photo Gallery 1 Title" class="img-polaroid img-responsive" />
+									<a class="lnk-polaroid" href="<?php echo $this->photoGalleryUrl($photoGallery);?>">
+										<img src="<?php echo $this->photoGalleryLeadingPhotoUrl($photoGallery);?>" alt="<?php echo $this->escape($photoGallery['title']);?>" class="img-polaroid img-responsive" />
 									</a>
 									<h3 class="title">
-										<a href="#link-to-photo-gallery-1">Photo Gallery 1 Title</a>
-										<small class="pull-right"></small>
+										<a href="<?php echo $this->photoGalleryUrl($photoGallery);?>"><?php echo $this->escape($photoGallery['title']);?></a>
 									</h3>
-									<p class="muted">Photo Gallery 1 Description</p>
+									<p class="muted"><?php echo $this->escape($photoGallery['description']);?></p>
 								</div>
 							</div>
 						</li>
-						<li class="col-md-4 ">
-							<div class="">
-								<div class="project">
-									<a class="lnk-polaroid" href="#link-to-photo-gallery-2">
-										<img src="/uploads/photo-galleries/2.jpg" alt="Photo Gallery 2 Title" class="img-polaroid img-responsive" />
-									</a>
-									<h3 class="title">
-										<a href="#link-to-photo-gallery-2">Photo Gallery 2 Title</a>
-										<small class="pull-right"></small>
-									</h3>
-									<p class="muted">Photo Gallery 2 Description</p>
-								</div>
-							</div>
-						</li>
-						<li class="col-md-4 ">
-							<div class="">
-								<div class="project">
-									<a class="lnk-polaroid" href="#link-to-photo-gallery-3">
-										<img src="/uploads/photo-galleries/3.jpg" alt="Photo Gallery 3 Title" class="img-polaroid img-responsive" />
-									</a>
-									<h3 class="title">
-										<a href="#link-to-photo-gallery-3">Photo Gallery 3 Title</a>
-										<small class="pull-right"></small>
-									</h3>
-									<p class="muted">Photo Gallery 3 Description</p>
-								</div>
-							</div>
-						</li>
+						<?php }?>
 					</ul>
 				</div>
 			</div>
@@ -127,8 +94,7 @@ $this->inlineScript()->appendFile($this->baseUrl('/plugins/flexslider/jquery.fle
 			controlNav: true,
 			smoothHeight: true,
 			animationLoop: true,
-			randomize: false,
-                        startAt: 1 //thx Djole!
+			randomize: false
 		});
 	<?php $this->inlineScript()->captureEnd();?>
 </script>

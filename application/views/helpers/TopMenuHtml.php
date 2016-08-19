@@ -20,6 +20,9 @@ class Zend_View_Helper_TopMenuHtml extends Zend_View_Helper_Abstract
             $this->view->placeholder('topMenuHtml')->captureStart(); ?>
 
                 <ul class="nav navbar-right" id="main-menu">
+                    <li>
+                        <a href="/"><?php echo $this->view->escape('Home') ;?></a>
+                    </li>
                     <?php 
                     foreach( $topMenuSitemapPages as $sitemapPage) {
                         ?>

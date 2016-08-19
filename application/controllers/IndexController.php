@@ -2,12 +2,13 @@
 
 class IndexController extends Zend_Controller_Action
 {
-
+    
     public function init()
     {
         /* Initialize action controller here */
     }
 
+    /* old indexAction
     public function indexAction()
     {
 
@@ -62,12 +63,78 @@ class IndexController extends Zend_Controller_Action
          * U prezentacionoj logici indexController-a, namesta se link view all (services) da baca na tu stranicu
          */
         
-        
-    }
-
+    //}
+    
 	public function testAction()
 	{
 		
 	}
+        
+        
+    //videti https://github.com/aleksandar-dimic/cubes-cms/blob/master/application/controllers/IndexController.php
+        
+    public function indexAction() {
+        $cmsIndexSlidesDbTable = new Application_Model_DbTable_CmsIndexSlides();
+
+        $indexSlides = $cmsIndexSlidesDbTable->search(array(
+                'filters' => array(
+                        'status' => Application_Model_DbTable_CmsIndexSlides::STATUS_ENABLED
+                ),
+                'orders' => array(
+                        'order_number' => 'ASC'
+                )
+        ));
+
+
+        $cmsSitemapPagesDbTable = new Application_Model_DbTable_CmsSitemapPages();
+
+        $servicesSitemapPages = $cmsSitemapPagesDbTable->search(array(
+                'filters' => array(
+                        'status' => Application_Model_DbTable_CmsSitemapPages::STATUS_ENABLED,
+                        'type' => 'ServicesPage'
+                ),
+                'limit' => 1
+        ));
+        $servicesSitemapPage = !empty($servicesSitemapPages) ? $servicesSitemapPages[0] : null;
+
+        $cmsServicesDbTable = new Application_Model_DbTable_CmsServices();
+        $services = $cmsServicesDbTable->search(array(
+                'filters' => array(
+                        'status' => Application_Model_DbTable_CmsServices::STATUS_ENABLED
+                ),
+                'orders' => array(
+                        'order_number' => 'ASC'
+                ),
+                'limit' => 4
+        ));
+
+        $photoGalleriesSitemapPages = $cmsSitemapPagesDbTable->search(array(
+                'filters' => array(
+                        'status' => Application_Model_DbTable_CmsSitemapPages::STATUS_ENABLED,
+                        'type' => 'PhotoGalleriesPage'
+                ),
+                'limit' => 1
+        ));
+        $photoGalleriesSitemapPage = !empty($photoGalleriesSitemapPages) ? $photoGalleriesSitemapPages[0] : null;
+
+        $cmsPhotoGalleriesDbTable = new Application_Model_DbTable_CmsPhotoGalleries();
+        $photoGalleries = $cmsPhotoGalleriesDbTable->search(array(
+                'filters' => array(
+                        'status' => Application_Model_DbTable_CmsServices::STATUS_ENABLED
+                ),
+                'orders' => array(
+                        'order_number' => 'ASC'
+                ),
+                'limit' => 3
+        ));
+
+        $this->view->indexSlides = $indexSlides;
+        $this->view->servicesSitemapPage = $servicesSitemapPage;
+        $this->view->services = $services;
+        $this->view->photoGalleriesSitemapPage = $photoGalleriesSitemapPage;
+        $this->view->photoGalleries = $photoGalleries;
+    }
+        
+        
 }
 
