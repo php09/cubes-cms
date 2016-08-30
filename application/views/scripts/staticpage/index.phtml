@@ -1,7 +1,7 @@
 <?php 
 $sitemapPage = $this->sitemapPage;
 $this->headTitle($sitemapPage['title']);
-$this->headMeta()->appendName('description', $sitemapPage['description']);
+$this->headMeta()->appendName('description', $sitemapPage['description']); 
 ?>
 
 <div id="highlighted">
@@ -34,23 +34,27 @@ $this->headMeta()->appendName('description', $sitemapPage['description']);
 					<div class="col-md-4 sidebar sidebar-right">
 						<div class="inner">
 							<div class="block">
+                                                            <?php if(!empty($this->sitemapPageLinks)) { ?>
 								<h3 class="block-title sub-title">
 									<span>About Menu</span>
 								</h3>
 								<ul class="nav nav-list secondary-nav">
+                                                                    <?php foreach($this->sitemapPageLinks as $sitemapPageLink) {;?>
 									<li>
-										<a href="#began"><i class="fa fa-chevron-right"></i> How It All Began</a>
+										<a href="<?php echo $this->sitemapPageUrl($sitemapPageLink['id']) ;?>"><i class="fa fa-chevron-right"></i> <?php echo $this->escape($sitemapPageLink['short_title']) ;?></a>
 									</li>
-									<li>
-										<a href="#team"><i class="fa fa-chevron-right"></i> Meet The Team</a>
-									</li>
-									<li>
-										<a href="#testimonials"><i class="fa fa-chevron-right"></i> Testimonials</a>
-									</li>
-									<li>
-										<a href="#"><i class="fa fa-chevron-right"></i> Another menu item</a>
-									</li>
+                                                                        <?php if( !empty($this->sitemapPageChildLinks) && $this->sitemapPageChildLinks[0]["parent_id"] == $sitemapPageLink["id"]) { ?>
+                                                                        <ul class="nav">
+                                                                            <?php foreach($this->sitemapPageChildLinks as $childLink) { ?>
+                                                                            <li>
+                                                                            <a href="<?php echo $this->sitemapPageUrl($childLink['id']) ;?>"><i class="fa fa-chevron-right"></i> <?php echo $this->escape($childLink['short_title']) ;?></a>
+                                                                            </li>
+                                                                            <?php } ?>
+                                                                        </ul>
+                                                                        <?php } ?>
+                                                                    <?php } ?>
 								</ul>
+                                                            <?php } ?>
 							</div>
 							
 							

@@ -31,5 +31,26 @@ class StaticpageController extends Zend_Controller_Action
         $this->view->sitemapPage = $sitemapPage;
         
         
+        $sitemapPageLinks = $cmsSitemapPageDbTable->search(
+                array(
+                    "filters" => array(
+                        "parent_id" => $sitemapPage["parent_id"],
+                        "status" => Application_Model_DbTable_CmsSitemapPages::STATUS_ENABLED,
+                        "type" => "StaticPage"
+                        )
+                    )
+                );
+        
+        $this->view->sitemapPageLinks = $sitemapPageLinks;
+        
+        $sitemapPageChildLinks = $cmsSitemapPageDbTable->search(
+                array(
+                    "filters" => array("parent_id" => $sitemapPage["id"],
+                    "status" => Application_Model_DbTable_CmsSitemapPages::STATUS_ENABLED)
+                ));
+        
+        $this->view->sitemapPageChildLinks = $sitemapPageChildLinks;
+        
+        
     }
 }
