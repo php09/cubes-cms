@@ -2,8 +2,12 @@
 
 class Admin_ServicesController extends Zend_Controller_Action 
 {
-
+    
     public function indexAction() {
+        
+        $translate = Zend_Registry::get('Zend_Translate');
+        $translate->setLocale('sr');
+        
         $flashMessenger = $this->getHelper('FlashMessenger');
         $systemMessages = array(
             'success' => $flashMessenger->getMessages('success'),
@@ -346,29 +350,4 @@ class Admin_ServicesController extends Zend_Controller_Action
             
         }
         
-        public function dashboardAction() {
-        Zend_Layout::getMvcInstance()->disableLayout();
-
-        $request = $this->getRequest();
-        $request instanceof Zend_Controller_Request_Http;
-
-        if(!$request->isXmlHttpRequest()) {
-            $redirector = $this->getHelper('Redirector');
-            $redirector->setExit(true)
-                ->gotoRoute(array(
-                    'controller' => 'admin_dashboard',
-                    'action' => 'index'
-                    ), 'default', true);
-        }
-
-        $cmsServicesDbTable = new Application_Model_DbTable_CmsServices();
-        $totalServices = $cmsServicesDbTable->count();
-        $activeServices = $cmsServicesDbTable->count(array('status' => Application_Model_DbTable_CmsServices::STATUS_ENABLED));
-
-        $this->view->totalServices = $totalServices;
-        $this->view->activeServices = $activeServices;
-    }
-        
-        
-    
 }

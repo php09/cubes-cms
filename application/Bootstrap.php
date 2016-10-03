@@ -2,6 +2,55 @@
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
+    
+    protected function _initCache ()
+{
+    $frontEndOptions = array('lifetime' => 10,
+                             'automatic_serialization' => true
+    );
+
+    if (!file_exists( "../cache" )) {
+        mkdir( "../cache", 0777, true);
+    }
+
+    $backEndOptions = array('cache_dir' => PUBLIC_PATH . "/../cache");
+    // Get a Zend_Cache_Core object
+    $cache = Zend_Cache::factory('Core',
+                                 'File',
+                                 $frontEndOptions,
+                                 $backEndOptions
+    );
+    Zend_Registry::set('mycache', $cache);
+}
+    
+
+protected function _initTranslate() {
+    $translate = new Zend_Translate(
+                    array(
+                    'adapter' => 'array',
+                    'content' => APPLICATION_PATH . '/translate/language/en.php',
+                    'locale' => 'en'
+                    )
+                );
+
+    $translate->addTranslation(
+        array(
+            'adapter' => 'array',
+            'content' => APPLICATION_PATH . '/translate/language/sr.php',
+            'locale' => 'sr'
+        )
+    );
+
+    $translate->setLocale('en');
+
+    Zend_Registry::set('Zend_Translate', $translate);
+}
+
+
+
+
+    
+    
     protected function _initRouter() {
         
         $this->bootstrap('db');
