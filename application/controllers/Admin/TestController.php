@@ -106,4 +106,57 @@ class Admin_TestController extends Zend_Controller_Action
         
     }
     
+    
+    public function soapAction() {
+        
+        $wsdl = "https://webservices.nbs.rs/CommunicationOfficeService1_0/ExchangeRateService.asmx?WSDL";
+        
+        $error = "";
+        
+        $currencyList = array();
+        
+        try {
+            
+            $soapClient = new Zend_Soap_Client_DotNet($wsdl); 
+        
+            
+            
+            $header = new SoapHeader( 
+                    "http://communicationoffice.nbs.rs", 
+                    "AuthenticationHeader", 
+                    array(
+                        "UserName" => "",
+                        "Password" => "",
+                        "LicenceID" => ""
+                        ) 
+                    );
+            
+            $soapClient->addSoapInputHeader($header);
+            
+            $responseRow = $soapClient->GetCurrentExchangeRate(array(
+                "exchangeRateListTypeID" => 1
+            ));
+            
+            if($responseRow->any) {
+                $response = simplexml_load_string($responseRow->any);
+                
+                if($response->ExchangeRateDataSet && $response->ExchangeRateDataSet->ExchangeRate) {
+                    $currencyList = $response->ExchangeRateDataSet->ExchangeRate;
+                    
+                }
+                
+            }
+            
+        } catch (Exception $ex) {
+            $error = $ex->getMessage();
+        }
+        
+        
+        $this->view->soapClient = $soapClient;
+        $this->view->response = $response;
+        $this->view->error = $error;
+        $this->view->currencyList = $currencyList;
+    }
+    
+    
 }

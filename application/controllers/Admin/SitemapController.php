@@ -104,6 +104,7 @@ class Admin_SitemapController extends Zend_Controller_Action
                         //ukoliko je validna forma
                         //get form data
                         $formData = $form->getValues(); //filtrirani i validirani podaci
+                        unset($formData['csrf_token']);
 
 //                        unset($formData['sitemap_page_photo']); //posto baca gresku jer u bazi ne postoji polje sitemap_page_photo zato ga brisemo
 

@@ -123,7 +123,8 @@ class Application_Form_Admin_SitemapPageAdd extends Zend_Form
         
         $this->addElement($body);
         
-        
+        $csrftoken = new Zend_Form_Element_Hash("csrf_token");
+        $this->addElement($csrftoken);
         
         
     }
